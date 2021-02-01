@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}{{ 'Update question' if questions else 'Add New Question' }}{% endblock %}
+
+{% block body %}
+
+    <h1>{{ 'Update Question' if questions else 'Add New Question' }}</h1>
+
+    <form action="" method="post">
+
+        <label for="question-input">Question:</label><br>
+        <textarea id="question-input" name="title" rows="4" cols="60">{{ questions[question_id][4] if questions }}</textarea>
+        <br>
+        <label for="message-input">Message:</label><br>
+        <textarea id="message-input" name="message" rows="4" cols="60">{{ questions[question_id][5] if questions }}</textarea>
+        <br>
+        {% if questions %}
+
+
+        {% endif %}
+        <label for="img">Select image:</label>
+        <input type="file" id="img" name="image" accept="image/*">
+        <br>
+        <br>
+        <button type="submit">{{ 'Update Question' if questions else 'Post question'}}</button>
+
+
+
+    </form>
+{% endblock %}

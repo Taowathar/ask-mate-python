@@ -8,11 +8,17 @@
         <h1>{{ question[4] }}</h1>
         <h2>{{ question[5] }}</h2>
 
+
         <h1><strong>Answers</strong></h1>
         {% for answer in answers %}
             <ul>
                 <li href="/question/{{ question[0] }}">{{ answer[4] }}</li>
             </ul>
         {% endfor %}
+        <br>
+        <a href="/question/{{ question[0] }}/edit">Edit Question</a>
+        <a href="/question/{{ question[0] }}/delete">Delete Question</a>
+        <br>
+        <a href="/">Back to all questions</a>
     </body>
 </html>
