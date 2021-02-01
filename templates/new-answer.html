@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Add Answer</title>
+    </head>
+    <body>
+        <h1>Add Answer</h1>
+        <form action="/add-answer" method="post">
+            <label for="message-input">Message:</label>
+            <textarea id="message-input" name="message" rows="4" cols="60"></textarea>
+            <br>
+            <label for="image">Select image:</label>
+            <input type="file" id="img" name="image" accept="image/*">
+            <br>
+            <br>
+            <button type="submit">Post Answer</button>
+        </form>
+    </body>
+</html>

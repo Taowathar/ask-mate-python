@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block title %}Index{% endblock %}
+
+{% block body %}
+    <h1>All questions</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Submission time</td>
+                <td>View number</td>
+                <td>Vote number</td>
+                <td>Title</td>
+                <td>Message</td>
+                <td>Image</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+                {% set outer_loop = loop %}
+                <tr>
+                    {% for data in question %}
+                        {% if loop.index == 2 %}
+                            <td>{{ dates[outer_loop.index - 1] }}</td>
+                        {% elif loop.index == 5 %}
+                            <td><a href="/question/{{ question[0] }}">{{ data }}</a></td>
+                        {% else %}
+                            <td>{{ data }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/add-question">Add question</a>
+{% endblock %}
