@@ -3,6 +3,7 @@ import csv
 QUESTIONS = 'sample_data/question.csv'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWERS = 'sample_data/answer.csv'
+ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
 def open_file(files):
@@ -30,4 +31,10 @@ def add_new_question(questions):
                  'vote_number': question[3], 'title': question[4], 'message': question[5], 'image': question[6]})
 
 
-
+def add_new_answer(answers):
+    with open('sample_data/answer.csv', 'w') as file:
+        writer = csv.DictWriter(file, fieldnames=ANSWER_HEADER)
+        writer.writeheader()
+        for answer in answers:
+            writer.writerow({'id': answer[0], 'submission_time': answer[1], 'vote_number': answer[2],
+                             'question_id': answer[3], 'message': answer[4], 'image': answer[5]})
