@@ -12,6 +12,8 @@
                 <td>View number</td>
                 <td>Vote number</td>
                 <td>Title</td>
+                <td>Vote Up</td>
+                <td>Vote Down</td>
                 <td>Message</td>
                 <td>Image</td>
             </tr>
@@ -25,6 +27,8 @@
                             <td>{{ dates[outer_loop.index - 1] }}</td>
                         {% elif loop.index == 5 %}
                             <td><a href="/question/{{ question[0] }}">{{ data }}</a></td>
+                                <td><a class='vote' href="/question/{{ question[0] }}/vote_up">+</a></td>
+                                <td><a class='vote' href="/question/{{ question[0] }}/vote_down">-</a></td>
                         {% else %}
                             <td>{{ data }}</td>
                         {% endif %}

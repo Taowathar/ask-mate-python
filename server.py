@@ -17,13 +17,6 @@ def index():
     return render_template('index.html', header=data_manager.QUESTION_HEADER, questions=questions, dates=dates)
 
 
-# @app.route('/list')
-# def lister():
-#     questions = data_manager.open_file(data_manager.QUESTIONS)
-#     questions.reverse()
-#     return render_template('list.html', questions=questions)
-
-
 @app.route('/question', methods=['GET', 'POST'])
 def add_question():
     questions = data_manager.open_file(data_manager.QUESTIONS)
@@ -99,6 +92,50 @@ def display(question_id):
     for question in questions:
         if int(question[0]) == int(question_id):
             return render_template('id.html', question=question, answers=answers)
+
+
+@app.route('/question/<int:question_id>/vote_up')
+def vote_up(question_id):
+    questions = data_manager.open_file(data_manager.QUESTIONS)
+    for question in questions:
+        if int(question[0]) == int(question_id):
+            question[3] = int(question[3]) + 1
+            data_manager.add_new_question(questions)
+            return redirect('/')
+
+
+@app.route('/question/<int:question_id>/vote_down')
+def vote_down(question_id):
+    questions = data_manager.open_file(data_manager.QUESTIONS)
+    for question in questions:
+        if int(question[0]) == int(question_id):
+            question[3] = int(question[3]) - 1
+            data_manager.add_new_question(questions)
+            return redirect('/')
+
+
+@app.route('/answer/<int:answer_id>/vote_up')
+def vote_up_answer(answer_id):
+    questions = data_manager.open_file(data_manager.QUESTIONS)
+    answers = data_manager.open_file(data_manager.ANSWERS)
+    for answer in answers:
+        if int(answer[0]) == int(answer_id):
+            question_id = answer[3]
+            answer[2] = int(answer[2]) + 1
+            data_manager.add_new_answer(answers)
+            return redirect(url_for('display', question_id=question_id))
+
+
+@app.route('/answer/<int:answer_id>/vote_down')
+def vote_down_answer(answer_id):
+    questions = data_manager.open_file(data_manager.QUESTIONS)
+    answers = data_manager.open_file(data_manager.ANSWERS)
+    for answer in answers:
+        if int(answer[0]) == int(answer_id):
+            question_id = answer[3]
+            answer[2] = int(answer[2]) - 1
+            data_manager.add_new_answer(answers)
+            return redirect(url_for('display', question_id=question_id))
 
 
 if __name__ == "__main__":

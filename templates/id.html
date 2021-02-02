@@ -1,28 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Display</title>
-    </head>
-    <body>
+{% extends 'layout.html' %}
+
+
+{% block body %}
         <h1>{{ question[4] }}</h1>
-        <h2>{{ question[5] }}</h2>
+        <p>{{ question[5] }}</p>
 
 
         <h1><strong>Answers</strong></h1>
-        {% for answer in answers %}
-            <ul>
-                {% if answer[3] == question[0] %}
-                    <li>{{ answer[4] }}</li>
-                    <a href="/answer/{{ answer[0] }}/delete">Delete Answer</a>
-                {% endif %}
-            </ul>
-        {% endfor %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Submission time</th>
+                    <th>Vote number</th>
+                    <th>Vote Up</th>
+                    <th>Vote Down</th>
+                    <th>Answer</th>
+                    <th>Image</th>
+                    <th>Delete Answer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for answer in answers %}
+                    {% if answer[3] == question[0] %}
+                        <tr>
+                            {% for data in answer %}
+                                {% if loop.index == 2 %}
+                                    <td>{{ data }}</td>
+                                {% elif loop.index == 4 %}
+                                    <td><a class='vote' href="/answer/{{ answer[0] }}/vote_up">+</a></td>
+                                    <td><a class='vote' href="/answer/{{ answer[0] }}/vote_down">-</a></td>
+                                {% else %}
+                                    <td>{{ data }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            <td><a href="/answer/{{ answer[0] }}/delete">Delete</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+         </table>
         <a href="/question/{{ question[0] }}/new-answer">Add New Answer</a>
         <br>
         <a href="/question/{{ question[0] }}/edit">Edit Question</a>
         <a href="/question/{{ question[0] }}/delete">Delete Question</a>
         <br>
         <a href="/">Back to all questions</a>
-    </body>
-</html>
+{% endblock %}

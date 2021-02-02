@@ -5,3 +5,8 @@ table {
 td {
     word-wrap: break-word;
 }
+
+.vote {
+    text-align: center;
+    text-decoration: none;
+}
