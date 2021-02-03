@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Add Answer</title>
-    </head>
-    <body>
+{% extends 'layout.html' %}
+
+
+{% block title %}Add answer{% endblock %}
+
+{% block body %}
         <h1>Add Answer</h1>
         <form action="" method="post">
-            <label for="message-input">Message:</label>
+            <label for="message-input">Message:</label><br>
             <textarea id="message-input" name="message" rows="4" cols="60"></textarea>
             <br>
             <label for="image">Select image:</label>
@@ -16,5 +15,4 @@
             <br>
             <button type="submit">Post Answer</button>
         </form>
-    </body>
-</html>
+{% endblock %}
