@@ -14,7 +14,12 @@ def index():
     dates = []
     for question in questions:
         dates.append(util.from_timestamp_to_time(int(question[1])))
-    return render_template('index.html', header=data_manager.QUESTION_HEADER, questions=questions, dates=dates)
+    sorting = request.args.get('sorting')
+    sorting_direction = request.args.get('sorting_direction')
+    if sorting is not None:
+        questions = util.sorter(sorting, sorting_direction, questions)
+    return render_template('index.html', header=data_manager.QUESTION_HEADER, questions=questions, dates=dates,
+                           sorting=sorting, sorting_direction=sorting_direction)
 
 
 @app.route('/question', methods=['GET', 'POST'])
