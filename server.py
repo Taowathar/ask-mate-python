@@ -89,9 +89,15 @@ def add_answer(question_id):
 def display(question_id):
     questions = data_manager.open_file(data_manager.QUESTIONS)
     answers = data_manager.open_file(data_manager.ANSWERS)
+    dates = {}
+    for answer in answers:
+        if answer[3] in dates:
+            dates[answer[3]].append(util.from_timestamp_to_time(int(answer[1])))
+        else:
+            dates[answer[3]] = [util.from_timestamp_to_time(int(answer[1]))]
     for question in questions:
         if int(question[0]) == int(question_id):
-            return render_template('id.html', question=question, answers=answers)
+            return render_template('id.html', question=question, answers=answers, dates=dates)
 
 
 @app.route('/question/<int:question_id>/vote_up')

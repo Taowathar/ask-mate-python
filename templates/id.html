@@ -25,13 +25,14 @@
                 </tr>
             </thead>
             <tbody>
+                {% set count = {'value': 0} %}
                 {% for answer in answers %}
                     {% if answer[3] == question[0] %}
-
                         <tr>
                             {% for data in answer %}
                                 {% if loop.index == 2 %}
-                                    <td>{{ data }}</td>
+                                    <td>{{ dates[answer[3]][count['value']] }}</td>
+                                    {% if count.update({'value': (count.value + 1)}) %} {% endif %}
                                 {% elif loop.index == 4 %}
                                     <td><a class='vote' href="/answer/{{ answer[0] }}/vote_up">+</a></td>
                                     <td><a class='vote' href="/answer/{{ answer[0] }}/vote_down">-</a></td>
