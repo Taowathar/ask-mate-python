@@ -10,17 +10,14 @@
                 <form action='/' method="get" enctype="multipart/form-data">
                     <label for="sorting">Sort by:</label>
                     <select name="sorting" id="sorting" required>
-                        <option {% if sorting == '' %}selected{% endif %}></option>
-                        <option value="title" {% if sorting == 'title' %}selected{% endif %}>Title</option>
-                        <option value="sub_time" {% if sorting == 'sub_time' %}selected{% endif %}>Submission time</option>
-                        <option value="message" {% if sorting == 'message' %}selected{% endif %}>Message</option>
-                        <option value="num_view" {% if sorting == 'num_view' %}selected{% endif %}>Number of views</option>
-                        <option value="num_vote" {% if sorting == 'num_vote' %}selected{% endif %}>Number of votes</option>
-                   </select>
+                        {% for type in sort_types %}
+                            <option value="{{ type }}" {{ "selected" if sorting == type }}>{{ type }}</option>
+                        {% endfor %}
+                    </select>
                    <select name="sorting_direction" id="sorting_direction" required>
-                        <option {% if sorting_direction == '' %}selected{% endif %}></option>
-                        <option value="asc" {% if sorting_direction == 'asc' %}selected{% endif %}>Ascending</option>
-                        <option value="desc" {% if sorting_direction == 'desc' %}selected{% endif %}>Descending</option>
+                        {% for direction in directions %}
+                            <option value="{{ direction }}" {{ "selected" if sorting_direction == direction }}>{{ direction }}</option>
+                        {% endfor %}
                    </select>
                    <button type="submit" name="submit" id="submit">Sort!</button>
                 </form>
@@ -50,6 +47,8 @@
                             <td><a href="/question/{{ question[0] }}">{{ data }}</a></td>
                                 <td><a class='vote' href="/question/{{ question[0] }}/vote_up">+</a></td>
                                 <td><a class='vote' href="/question/{{ question[0] }}/vote_down">-</a></td>
+                        {% elif loop.index == 7 %}
+                            <td><img src='{{ url_for('static', filename='Images/'+ data) }}' width="50"></td>
                         {% else %}
                             <td>{{ data }}</td>
                         {% endif %}

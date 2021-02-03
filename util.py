@@ -19,11 +19,11 @@ def from_timestamp_to_time(timestamp):
 
 
 def sorter(sorting, sorting_direction, data):
-    check_list = ["title", "message"]
+    check_list = ["Title", "Message"]
     if sorting in check_list:
-        if sorting == "title":
+        if sorting == "Title":
             sort_id = 4
-        elif sorting == "message":
+        elif sorting == "Message":
             sort_id = 5
         new_data = []
         while data:
@@ -35,16 +35,16 @@ def sorter(sorting, sorting_direction, data):
                     minimum_row = row
             new_data.append(minimum_row)
             data.remove(minimum_row)
-        if sorting_direction == "asc":
+        if sorting_direction == "Ascending":
             return new_data
         else:
             return list(reversed(new_data))
     else:
-        if sorting == "sub_time":
+        if sorting == "Submission Time":
             sort_id = 0
-        elif sorting == "num_view":
+        elif sorting == "Number of views":
             sort_id = 2
-        elif sorting == "num_vote":
+        elif sorting == "Number of votes":
             sort_id = 3
         new_data = []
         while data:
@@ -56,7 +56,7 @@ def sorter(sorting, sorting_direction, data):
                     minimum_row = row
             new_data.append(minimum_row)
             data.remove(minimum_row)
-        if sorting_direction == "asc":
+        if sorting_direction == "Ascending":
             return new_data
         else:
             return list(reversed(new_data))

@@ -1,10 +1,14 @@
+import os
 from flask import Flask, render_template, redirect, request, url_for
+from werkzeug.utils import secure_filename
 
 import data_manager
 import util
 
+UPLOAD_FOLDER = 'static/Images'
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route("/")
@@ -14,12 +18,15 @@ def index():
     dates = []
     for question in questions:
         dates.append(util.from_timestamp_to_time(int(question[1])))
+    sort_types = ['Title', 'Submission Time', 'Message', 'Number of views', 'Number of votes']
     sorting = request.args.get('sorting')
+    directions = ['Ascending', 'Descending']
     sorting_direction = request.args.get('sorting_direction')
     if sorting is not None:
         questions = util.sorter(sorting, sorting_direction, questions)
     return render_template('index.html', header=data_manager.QUESTION_HEADER, questions=questions, dates=dates,
-                           sorting=sorting, sorting_direction=sorting_direction)
+                           sorting=sorting, sorting_direction=sorting_direction, directions=directions,
+                           sort_types=sort_types)
 
 
 @app.route('/question', methods=['GET', 'POST'])
@@ -28,10 +35,13 @@ def add_question():
     new_id = util.get_max_id(questions) + 1
     submission_time = util.get_submission_time()
     view_number, vote_number = 0, 0
-    image = 'x'
     if request.method == 'POST':
+        file = request.files['image']
+        filename = secure_filename(file.filename)
+        if file.filename != '':
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         question = [new_id, submission_time, view_number, vote_number, request.form['title'], request.form['message'],
-                    image]
+                    filename]
         questions.append(question)
         data_manager.add_new_question(questions)
         return redirect(url_for('display', question_id=new_id))
@@ -81,9 +91,12 @@ def add_answer(question_id):
     new_id = util.get_max_id(answers) + 1
     submission_time = util.get_submission_time()
     vote_number = 0
-    image = 'x'
     if request.method == 'POST':
-        new_answer = [new_id, submission_time, vote_number, question_id, request.form['message'], image]
+        file = request.files['image']
+        filename = secure_filename(file.filename)
+        if file.filename != '':
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        new_answer = [new_id, submission_time, vote_number, question_id, request.form['message'], filename]
         answers.insert(new_id, new_answer)
         data_manager.add_new_answer(answers)
         return redirect(url_for('display', question_id=question_id))

@@ -6,7 +6,8 @@
 {% block body %}
         <h1>{{ question[4] }}</h1>
         <p>{{ question[5] }}</p>
-
+        <br>
+        <img src='{{ url_for('static', filename='Images/'+ question[6]) }}' width="600">
 
         <h2><strong>Answers:</strong></h2>
         <br>
@@ -36,6 +37,8 @@
                                 {% elif loop.index == 4 %}
                                     <td><a class='vote' href="/answer/{{ answer[0] }}/vote_up">+</a></td>
                                     <td><a class='vote' href="/answer/{{ answer[0] }}/vote_down">-</a></td>
+                                {% elif loop.index == 6 %}
+                                    <td><img src='{{ url_for('static', filename='Images/'+ data) }}' width="50"></td>
                                 {% else %}
                                     <td>{{ data }}</td>
                                 {% endif %}
