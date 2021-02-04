@@ -1,7 +1,5 @@
-import os
 from flask import Flask, render_template, redirect, request, url_for
-
-
+import os
 import data_manager
 import util
 
@@ -138,7 +136,6 @@ def vote_down(question_id):
 
 @app.route('/answer/<int:answer_id>/vote_up')
 def vote_up_answer(answer_id):
-    questions = data_manager.open_file(data_manager.QUESTIONS)
     answers = data_manager.open_file(data_manager.ANSWERS)
     for answer in answers:
         if int(answer[0]) == int(answer_id):
@@ -150,7 +147,6 @@ def vote_up_answer(answer_id):
 
 @app.route('/answer/<int:answer_id>/vote_down')
 def vote_down_answer(answer_id):
-    questions = data_manager.open_file(data_manager.QUESTIONS)
     answers = data_manager.open_file(data_manager.ANSWERS)
     for answer in answers:
         if int(answer[0]) == int(answer_id):
