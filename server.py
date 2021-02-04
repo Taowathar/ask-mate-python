@@ -116,43 +116,30 @@ def display(question_id):
 
 
 @app.route('/question/<int:question_id>/vote_up')
-def vote_up(question_id):
-    questions = data_manager.open_file(data_manager.QUESTIONS)
-    for question in questions:
-        if int(question[0]) == int(question_id):
-            question[3] = int(question[3]) + 1
-            data_manager.add_new_question(questions)
-            return redirect('/')
-
-
 @app.route('/question/<int:question_id>/vote_down')
-def vote_down(question_id):
+def vote(question_id):
     questions = data_manager.open_file(data_manager.QUESTIONS)
     for question in questions:
         if int(question[0]) == int(question_id):
-            question[3] = int(question[3]) - 1
+            if request.path == '/question/' + str(question_id) + '/vote_up':
+                question[3] = int(question[3]) + 1
+            else:
+                question[3] = int(question[3]) - 1
             data_manager.add_new_question(questions)
             return redirect('/')
 
 
 @app.route('/answer/<int:answer_id>/vote_up')
-def vote_up_answer(answer_id):
-    answers = data_manager.open_file(data_manager.ANSWERS)
-    for answer in answers:
-        if int(answer[0]) == int(answer_id):
-            question_id = answer[3]
-            answer[2] = int(answer[2]) + 1
-            data_manager.add_new_answer(answers)
-            return redirect(url_for('display', question_id=question_id))
-
-
 @app.route('/answer/<int:answer_id>/vote_down')
-def vote_down_answer(answer_id):
+def vote_answer(answer_id):
     answers = data_manager.open_file(data_manager.ANSWERS)
     for answer in answers:
         if int(answer[0]) == int(answer_id):
             question_id = answer[3]
-            answer[2] = int(answer[2]) - 1
+            if request.path == '/answer/' + str(answer_id) + '/vote_up':
+                answer[2] = int(answer[2]) + 1
+            else:
+                answer[2] = int(answer[2]) - 1
             data_manager.add_new_answer(answers)
             return redirect(url_for('display', question_id=question_id))
 
