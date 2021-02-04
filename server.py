@@ -66,7 +66,8 @@ def delete_question(question_id):
     questions = data_manager.open_file(data_manager.QUESTIONS)
     for question in questions:
         if int(question[0]) == int(question_id):
-            os.remove(f"static/Images/{questions[questions.index(question)][6]}")
+            if question[6] != "":
+                os.remove(f"static/Images/{questions[questions.index(question)][6]}")
             del questions[questions.index(question)]
     data_manager.add_new_question(questions)
     return redirect('/')
@@ -78,7 +79,8 @@ def delete_answer(answer_id):
     for answer in answers:
         if int(answer[0]) == int(answer_id):
             question_id = answer[3]
-            os.remove(f"static/Images/{answers[answers.index(answer)][5]}")
+            if answer[5] != '':
+                os.remove(f"static/Images/{answers[answers.index(answer)][5]}")
             del answers[answers.index(answer)]
     data_manager.add_new_answer(answers)
     return redirect(url_for('display', question_id=question_id))

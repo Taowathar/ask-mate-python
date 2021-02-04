@@ -48,7 +48,11 @@
                                 <td><a class='vote' href="/question/{{ question[0] }}/vote_up">+</a></td>
                                 <td><a class='vote' href="/question/{{ question[0] }}/vote_down">-</a></td>
                         {% elif loop.index == 7 %}
-                            <td><img src='{{ url_for('static', filename='Images/'+ data) }}' width="50"></td>
+                            {% if data != '' %}
+                                <td><img src='{{ url_for('static', filename='Images/'+ data) }}' width="50"></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
                         {% else %}
                             <td>{{ data }}</td>
                         {% endif %}
