@@ -50,8 +50,9 @@ def update_question(question_id):
     if request.method == 'POST':
         for question in questions:
             if int(question[0]) == int(question_id):
+                filename = util.save_image(app)
                 updated_question = [question_id, submission_time, question[2], question[3], request.form['title'],
-                                    request.form['message'], question[6]]
+                                    request.form['message'], filename]
                 del questions[question_id - 1]
                 questions.insert(question_id - 1, updated_question)
         data_manager.add_new_question(questions)
