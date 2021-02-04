@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template, redirect, request, url_for
-from werkzeug.utils import secure_filename
+
 
 import data_manager
 import util
@@ -36,10 +36,7 @@ def add_question():
     submission_time = util.get_submission_time()
     view_number, vote_number = 0, 0
     if request.method == 'POST':
-        file = request.files['image']
-        filename = secure_filename(file.filename)
-        if file.filename != '':
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        filename = util.save_image(app)
         question = [new_id, submission_time, view_number, vote_number, request.form['title'], request.form['message'],
                     filename]
         questions.append(question)
@@ -69,6 +66,7 @@ def delete_question(question_id):
     questions = data_manager.open_file(data_manager.QUESTIONS)
     for question in questions:
         if int(question[0]) == int(question_id):
+            os.remove(f"static/Images/{questions[questions.index(question)][6]}")
             del questions[questions.index(question)]
     data_manager.add_new_question(questions)
     return redirect('/')
@@ -80,6 +78,7 @@ def delete_answer(answer_id):
     for answer in answers:
         if int(answer[0]) == int(answer_id):
             question_id = answer[3]
+            os.remove(f"static/Images/{answers[answers.index(answer)][5]}")
             del answers[answers.index(answer)]
     data_manager.add_new_answer(answers)
     return redirect(url_for('display', question_id=question_id))
@@ -92,10 +91,7 @@ def add_answer(question_id):
     submission_time = util.get_submission_time()
     vote_number = 0
     if request.method == 'POST':
-        file = request.files['image']
-        filename = secure_filename(file.filename)
-        if file.filename != '':
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        filename = util.save_image(app)
         new_answer = [new_id, submission_time, vote_number, question_id, request.form['message'], filename]
         answers.insert(new_id, new_answer)
         data_manager.add_new_answer(answers)

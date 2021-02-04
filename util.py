@@ -1,4 +1,7 @@
 from datetime import datetime
+from werkzeug.utils import secure_filename
+from flask import request
+import os
 
 
 def get_max_id(questions):
@@ -60,3 +63,11 @@ def sorter(sorting, sorting_direction, data):
             return new_data
         else:
             return list(reversed(new_data))
+
+
+def save_image(app):
+    file = request.files['image']
+    filename = secure_filename(file.filename)
+    if file.filename != '':
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return filename
