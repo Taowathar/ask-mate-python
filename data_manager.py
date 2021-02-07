@@ -1,4 +1,8 @@
 import csv
+import os
+from werkzeug.utils import secure_filename
+from flask import request
+
 
 QUESTIONS = 'sample_data/question.csv'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
@@ -6,19 +10,13 @@ ANSWERS = 'sample_data/answer.csv'
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
-def open_file(files):
-    datas = []
-    with open(files, 'r') as file:
+def open_file(csv_file):
+    data = []
+    with open(csv_file, 'r') as file:
         content = csv.DictReader(file)
         for row in content:
-            data = []
-            for item in row:
-                if item == 'image':
-                    data.append(row[item])
-                    break
-                data.append(row[item])
-            datas.append(data)
-    return datas
+            data.append(row)
+    return data
 
 
 def add_new_question(questions):
@@ -27,8 +25,9 @@ def add_new_question(questions):
         writer.writeheader()
         for question in questions:
             writer.writerow(
-                {'id': question[0], 'submission_time': question[1], 'view_number': question[2],
-                 'vote_number': question[3], 'title': question[4], 'message': question[5], 'image': question[6]})
+                {'id': question['id'], 'submission_time': question['submission_time'],
+                 'view_number': question['view_number'], 'vote_number': question['vote_number'],
+                 'title': question['title'], 'message': question['message'], 'image': question['image']})
 
 
 def add_new_answer(answers):
@@ -36,5 +35,14 @@ def add_new_answer(answers):
         writer = csv.DictWriter(file, fieldnames=ANSWER_HEADER)
         writer.writeheader()
         for answer in answers:
-            writer.writerow({'id': answer[0], 'submission_time': answer[1], 'vote_number': answer[2],
-                             'question_id': answer[3], 'message': answer[4], 'image': answer[5]})
+            writer.writerow({'id': answer['id'], 'submission_time': answer['submission_time'],
+                             'vote_number': answer['vote_number'], 'question_id': answer['question_id'],
+                             'message': answer['message'], 'image': answer['image']})
+
+
+def save_image(app):
+    file = request.files['image']
+    filename = secure_filename(file.filename)
+    if file.filename != '':
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return filename

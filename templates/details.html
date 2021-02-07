@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}Question page{% endblock %}
+
+
+{% block body %}
+
+        <h1>{{ question['title'] }}</h1>
+        <p>{{ question['message'] }}</p>
+        <br>
+        {% if question['image'] != '' %}
+            <img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="600">
+        {% else %}
+
+        {% endif %}
+        <h2><strong>Answers:</strong></h2>
+        <br>
+        <a href="/question/{{ question['id'] }}/new-answer">Add New Answer</a><br>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Submission time</th>
+                    <th>Votes</th>
+                    <th>Vote Up</th>
+                    <th>Vote Down</th>
+                    <th>Answer</th>
+                    <th>Image</th>
+                    <th>Delete Answer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set count = {'value': 0} %}
+                {% for answer in answers %}
+                    {% if answer['question_id'] == question['id'] %}
+                        <tr>
+                            <td>{{ answer['id'] }}</td>
+                            <td>{{ dates[answer['question_id']][count['value']] }}</td>
+                            {% if count.update({'value': (count.value + 1)}) %} {% endif %}
+                            <td>{{ answer['vote_number'] }}</td>
+                            <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_up">+</a></td>
+                            <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_down">-</a></td>
+                            <td>{{ answer['message'] }}</td>
+                            {% if answer['image'] != '' %}
+                                <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                            <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
+                        </tr><br>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+         </table>
+        <br>
+        <br>
+        <a href="/question/{{ question['id'] }}/edit">Edit Question</a><br>
+        <a href="/question/{{ question['id'] }}/delete">Delete Question</a>
+        <br>
+        <br>
+        <a href="/">Back to all questions</a>
+
+{% endblock %}

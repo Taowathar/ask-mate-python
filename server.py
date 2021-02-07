@@ -15,7 +15,7 @@ def index():
     questions.reverse()
     dates = []
     for question in questions:
-        dates.append(util.from_timestamp_to_time(int(question[1])))
+        dates.append(util.from_timestamp_to_time(int(question['submission_time'])))
     sort_types = ['Title', 'Submission Time', 'Message', 'Number of views', 'Number of votes']
     sorting = request.args.get('sorting')
     directions = ['Ascending', 'Descending']
@@ -32,11 +32,10 @@ def add_question():
     questions = data_manager.open_file(data_manager.QUESTIONS)
     new_id = util.get_max_id(questions) + 1
     submission_time = util.get_submission_time()
-    view_number, vote_number = 0, 0
     if request.method == 'POST':
-        filename = util.save_image(app)
-        question = [new_id, submission_time, view_number, vote_number, request.form['title'], request.form['message'],
-                    filename]
+        filename = data_manager.save_image(app)
+        question = {'id': new_id, 'submission_time': submission_time, 'view_number': 0, 'vote_number': 0,
+                    'title': request.form['title'], 'message': request.form['message'], 'image': filename}
         questions.append(question)
         data_manager.add_new_question(questions)
         return redirect(url_for('display', question_id=new_id))
@@ -49,10 +48,12 @@ def update_question(question_id):
     submission_time = util.get_submission_time()
     if request.method == 'POST':
         for question in questions:
-            if int(question[0]) == int(question_id):
-                filename = util.save_image(app)
-                updated_question = [question_id, submission_time, question[2], question[3], request.form['title'],
-                                    request.form['message'], filename]
+            if int(question['id']) == int(question_id):
+                filename = data_manager.save_image(app)
+                updated_question = {'id': question_id, 'submission_time': submission_time,
+                                    'view_number': question['view_number'], 'vote_number': question['vote_number'],
+                                    'title': request.form['title'], 'message': request.form['message'],
+                                    'image': filename}
                 del questions[question_id - 1]
                 questions.insert(question_id - 1, updated_question)
         data_manager.add_new_question(questions)
@@ -64,9 +65,9 @@ def update_question(question_id):
 def delete_question(question_id):
     questions = data_manager.open_file(data_manager.QUESTIONS)
     for question in questions:
-        if int(question[0]) == int(question_id):
-            if question[6] != "":
-                os.remove(f"static/Images/{questions[questions.index(question)][6]}")
+        if int(question['id']) == int(question_id):
+            if question['image'] != "":
+                os.remove(f"static/Images/{questions[questions.index(question)]['image']}")
             del questions[questions.index(question)]
     data_manager.add_new_question(questions)
     return redirect('/')
@@ -76,10 +77,10 @@ def delete_question(question_id):
 def delete_answer(answer_id):
     answers = data_manager.open_file(data_manager.ANSWERS)
     for answer in answers:
-        if int(answer[0]) == int(answer_id):
-            question_id = answer[3]
-            if answer[5] != '':
-                os.remove(f"static/Images/{answers[answers.index(answer)][5]}")
+        if int(answer['id']) == int(answer_id):
+            question_id = answer['question_id']
+            if answer['image'] != '':
+                os.remove(f"static/Images/{answers[answers.index(answer)]['image']}")
             del answers[answers.index(answer)]
     data_manager.add_new_answer(answers)
     return redirect(url_for('display', question_id=question_id))
@@ -90,10 +91,10 @@ def add_answer(question_id):
     answers = data_manager.open_file(data_manager.ANSWERS)
     new_id = util.get_max_id(answers) + 1
     submission_time = util.get_submission_time()
-    vote_number = 0
     if request.method == 'POST':
-        filename = util.save_image(app)
-        new_answer = [new_id, submission_time, vote_number, question_id, request.form['message'], filename]
+        filename = data_manager.save_image(app)
+        new_answer = {'id': new_id, 'submission_time': submission_time,'vote_number': 0, 'question_id': question_id,
+                      'message': request.form['message'], 'image': filename}
         answers.insert(new_id, new_answer)
         data_manager.add_new_answer(answers)
         return redirect(url_for('display', question_id=question_id))
@@ -106,13 +107,13 @@ def display(question_id):
     answers = data_manager.open_file(data_manager.ANSWERS)
     dates = {}
     for answer in answers:
-        if answer[3] in dates:
-            dates[answer[3]].append(util.from_timestamp_to_time(int(answer[1])))
+        if answer['question_id'] in dates:
+            dates[answer['question_id']].append(util.from_timestamp_to_time(int(answer['submission_time'])))
         else:
-            dates[answer[3]] = [util.from_timestamp_to_time(int(answer[1]))]
+            dates[answer['question_id']] = [util.from_timestamp_to_time(int(answer['submission_time']))]
     for question in questions:
-        if int(question[0]) == int(question_id):
-            return render_template('id.html', question=question, answers=answers, dates=dates)
+        if int(question['id']) == int(question_id):
+            return render_template('details.html', question=question, answers=answers, dates=dates)
 
 
 @app.route('/question/<int:question_id>/vote_up')
@@ -120,11 +121,11 @@ def display(question_id):
 def vote(question_id):
     questions = data_manager.open_file(data_manager.QUESTIONS)
     for question in questions:
-        if int(question[0]) == int(question_id):
+        if int(question['id']) == int(question_id):
             if request.path == '/question/' + str(question_id) + '/vote_up':
-                question[3] = int(question[3]) + 1
+                question['vote_number'] = int(question['vote_number']) + 1
             else:
-                question[3] = int(question[3]) - 1
+                question['vote_number'] = int(question['vote_number']) - 1
             data_manager.add_new_question(questions)
             return redirect('/')
 
@@ -134,12 +135,12 @@ def vote(question_id):
 def vote_answer(answer_id):
     answers = data_manager.open_file(data_manager.ANSWERS)
     for answer in answers:
-        if int(answer[0]) == int(answer_id):
-            question_id = answer[3]
+        if int(answer['id']) == int(answer_id):
+            question_id = answer['question_id']
             if request.path == '/answer/' + str(answer_id) + '/vote_up':
-                answer[2] = int(answer[2]) + 1
+                answer['vote_number'] = int(answer['vote_number']) + 1
             else:
-                answer[2] = int(answer[2]) - 1
+                answer['vote_number'] = int(answer['vote_number']) - 1
             data_manager.add_new_answer(answers)
             return redirect(url_for('display', question_id=question_id))
 

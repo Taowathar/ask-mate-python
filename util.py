@@ -1,13 +1,10 @@
 from datetime import datetime
-from werkzeug.utils import secure_filename
-from flask import request
-import os
 
 
 def get_max_id(questions):
     id_list = []
     for question in questions:
-        id_list.append(question[0])
+        id_list.append(question['id'])
     return int(max(id_list)) if len(id_list) != 0 else 0
 
 
@@ -25,9 +22,9 @@ def sorter(sorting, sorting_direction, data):
     check_list = ["Title", "Message"]
     if sorting in check_list:
         if sorting == "Title":
-            sort_id = 4
+            sort_id = 'title'
         elif sorting == "Message":
-            sort_id = 5
+            sort_id = 'message'
         new_data = []
         while data:
             minimum = data[0][sort_id]
@@ -44,11 +41,11 @@ def sorter(sorting, sorting_direction, data):
             return list(reversed(new_data))
     else:
         if sorting == "Submission Time":
-            sort_id = 0
+            sort_id = 'id'
         elif sorting == "Number of views":
-            sort_id = 2
+            sort_id = 'view_number'
         elif sorting == "Number of votes":
-            sort_id = 3
+            sort_id = 'vote_number'
         new_data = []
         while data:
             minimum = int(data[0][sort_id])
@@ -63,11 +60,3 @@ def sorter(sorting, sorting_direction, data):
             return new_data
         else:
             return list(reversed(new_data))
-
-
-def save_image(app):
-    file = request.files['image']
-    filename = secure_filename(file.filename)
-    if file.filename != '':
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return filename

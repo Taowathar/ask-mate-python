@@ -38,25 +38,20 @@
         </thead>
         <tbody>
             {% for question in questions %}
-                {% set outer_loop = loop %}
                 <tr>
-                    {% for data in question %}
-                        {% if loop.index == 2 %}
-                            <td>{{ dates[outer_loop.index - 1] }}</td>
-                        {% elif loop.index == 5 %}
-                            <td><a href="/question/{{ question[0] }}">{{ data }}</a></td>
-                                <td><a class='vote' href="/question/{{ question[0] }}/vote_up">+</a></td>
-                                <td><a class='vote' href="/question/{{ question[0] }}/vote_down">-</a></td>
-                        {% elif loop.index == 7 %}
-                            {% if data != '' %}
-                                <td><img src='{{ url_for('static', filename='Images/'+ data) }}' width="200"></td>
-                            {% else %}
-                                <td></td>
-                            {% endif %}
-                        {% else %}
-                            <td>{{ data }}</td>
-                        {% endif %}
-                    {% endfor %}
+                    <td>{{ question['id'] }}</td>
+                    <td>{{ dates[loop.index - 1] }}</td>
+                    <td>{{ question['view_number'] }}</td>
+                    <td>{{ question['vote_number'] }}</td>
+                    <td><a class='vote' href="/question/{{ question['id'] }}/vote_up">+</a></td>
+                    <td><a class='vote' href="/question/{{ question['id'] }}/vote_down">-</a></td>
+                    <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                    <td>{{ question['message'] }}</td>
+                    {%  if question['image'] != '' %}
+                        <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
