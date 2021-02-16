@@ -96,6 +96,17 @@ def update_question(cursor: RealDictCursor, question_id, updated_question) -> li
         WHERE id = {question_id}"""
     cursor.execute(query)
 
+@connection.connection_handler
+def update_answer(cursor: RealDictCursor, question_id, updated_answer) -> list:
+    query = f"""
+        UPDATE answer
+        SET submission_time = '{updated_answer['submission_time']}',
+        vote_number = '{updated_answer['vote_number']}',
+        answer = '{updated_answer['answer']}',
+        image = '{updated_answer['image']}'
+        WHERE id = {question_id}"""
+    cursor.execute(query)
+
 
 @connection.connection_handler
 def delete_question(cursor: RealDictCursor, question_id) -> list:

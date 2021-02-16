@@ -51,6 +51,20 @@ def update_question(question_id):
         return redirect(url_for('display', question_id=question_id))
     return render_template('question.html', question=question, question_id=int(question_id) - 1)
 
+@app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
+def update_answer(answer_id):
+    answer = data_manager.get_question(answer_id)
+    submission_time = util.get_submission_time()
+    if request.method == 'POST':
+        filename = data_manager.save_image(app)
+        updated_question = {'id': answer_id, 'submission_time': submission_time,
+                            'vote_number': answer[0]['vote_number'],
+                            'answer': request.form['answer'],
+                            'image': filename}
+        data_manager.update_question(answer_id, updated_question)
+        return redirect(url_for('display', answer_id=answer_id))
+    return render_template('edit_answer.html', answer=answer, answer_id=int(answer_id))
+
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):

@@ -27,6 +27,7 @@
                     <th>Vote Down</th>
                     <th>Answer</th>
                     <th>Image</th>
+                    <th>Update Answer</th>
                     <th>Delete Answer</th>
                 </tr>
             </thead>
@@ -44,6 +45,7 @@
                             {% else %}
                                 <td></td>
                             {% endif %}
+                            <td><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
                             <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
                         </tr><br>
                 {% endfor %}
