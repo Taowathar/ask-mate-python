@@ -11,7 +11,6 @@ def get_connection_string():
     database_name = os.environ.get('PSQL_DB_NAME')
     env_variables_defined = user_name and password and host and database_name
     if env_variables_defined:
-
         return 'postgresql://{user_name}:{password}@{host}/{database_name}'.format(
             user_name=user_name,
             password=password,
@@ -41,5 +40,4 @@ def connection_handler(function):
         dict_cur.close()
         connection.close()
         return ret_value
-
     return wrapper

@@ -91,19 +91,12 @@ def display(question_id):
     question = data_manager.get_question(question_id)
     answers = data_manager.get_answers(question_id)
     question_comments = data_manager.get_question_comments(question_id)
-    # answer_id =
     answer_comments = data_manager.get_comments()
-
-
     view_number = question[0]['view_number'] + 1
     updated_question = {'id': question_id, 'submission_time': question[0]['submission_time'],'view_number': view_number,
                         'vote_number': question[0]['vote_number'], 'title': question[0]['title'],
                         'message': question[0]['message'], 'image': question[0]['image']}
     data_manager.update_question(question_id, updated_question)
-
-
-
-
     return render_template('details.html', question=question, answers=answers, question_comments=question_comments,
                            answer_comments=answer_comments)
 

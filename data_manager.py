@@ -1,4 +1,3 @@
-# import csv
 import os
 from werkzeug.utils import secure_filename
 from flask import request
