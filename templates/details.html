@@ -6,57 +6,110 @@
 
 {% block body %}
 
-        <h1>{{ question[0]['title'] }}</h1>
-        <p>{{ question[0]['message'] }}</p>
-        <br>
-        {% if question[0]['image'] != None and question[0]['image'] != '' %}
-            <img src='{{ url_for('static', filename='Images/'+ question[0]['image']) }}' width="600">
-        {% else %}
+    <h1>{{ question[0]['title'] }}</h1>
+    <p>{{ question[0]['message'] }}</p>
+    <br>
+    {% if question[0]['image'] != None and question[0]['image'] != '' %}
+        <img src='{{ url_for('static', filename='Images/'+ question[0]['image']) }}' width="600">
+    {% else %}
 
-        {% endif %}
-        <h2><strong>Answers:</strong></h2>
-        <br>
-        <a href="/question/{{ question[0]['id'] }}/new-answer">Add New Answer</a><br>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Submission time</th>
-                    <th>Votes</th>
-                    <th>Vote Up</th>
-                    <th>Vote Down</th>
-                    <th>Answer</th>
-                    <th>Image</th>
-                    <th>Update Answer</th>
-                    <th>Delete Answer</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for answer in answers %}
-                        <tr>
-                            <td>{{ answer['id'] }}</td>
-                            <td>{{ answer['submission_time'] }}</td>
-                            <td>{{ answer['vote_number'] }}</td>
-                            <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_up">+</a></td>
-                            <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_down">-</a></td>
-                            <td>{{ answer['message'] }}</td>
-                            {% if answer['image'] != None %}
-                                <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
-                            {% else %}
-                                <td></td>
-                            {% endif %}
-                            <td><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
-                            <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
-                        </tr><br>
-                {% endfor %}
-            </tbody>
-         </table>
-        <br>
-        <br>
-        <a href="/question/{{ question[0]['id'] }}/edit">Edit Question</a><br>
-        <a href="/question/{{ question[0]['id'] }}/delete">Delete Question</a>
-        <br>
-        <br>
-        <a href="/">Back to all questions</a>
+    {% endif %}
+    <h2><strong>Comments:</strong></h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Comment Message</th>
+                <th>Submission Time</th>
+                <th>Edited Count</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in question_comments %}
+                {% if comment['answer_id'] == None %}
+                    <tr>
+                        <td>{{ comment['message'] }}</td>
+                        <td>{{ comment['submission_time'] }}</td>
+                        <td>{{ comment['edited_count'] }}</td>
+                        <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
+                        <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2><strong>Answers:</strong></h2>
+    <br>
+    <a href="/question/{{ question[0]['id'] }}/new-answer">Add New Answer</a><br>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Submission time</th>
+                <th>Votes</th>
+                <th>Vote Up</th>
+                <th>Vote Down</th>
+                <th>Answer</th>
+                <th>Image</th>
+                <th>Update Answer</th>
+                <th>Delete Answer</th>
+                <th>Add Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in answers %}
+                    <tr>
+                        <td>{{ answer['id'] }}</td>
+                        <td>{{ answer['submission_time'] }}</td>
+                        <td>{{ answer['vote_number'] }}</td>
+                        <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_up">+</a></td>
+                        <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_down">-</a></td>
+                        <td>{{ answer['message'] }}</td>
+                        {% if answer['image'] != None and answer['image'] != '' %}
+                            <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
+                        <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
+                        <td><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
+                    </tr><br>
+                    <tr>
+                    {% for comment in answer_comments %}
+                        {% if comment['answer_id'] == answer['id'] %}
+{#                        <table>#}
+                            <tr>
+
+                                <th>Comment</th>
+                                <th>Submission Time</th>
+                                <th>Edited Count</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            <tr>
+                                <td>{{ comment['message'] }} </td>
+                                <td>{{ comment['submission_time'] }}</td>
+                                <td>{{ comment['edited_count'] }}</td>
+                                <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
+                                <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
+
+                        {% endif %}
+
+                    {% endfor %}
+                        </tr>
+{#                                </table>#}
+                              </tr>
+            {% endfor %}
+        </tbody>
+     </table>
+    <br>
+    <br>
+    <a href="/question/{{ question[0]['id'] }}/edit">Edit Question</a><br>
+    <a href="/question/{{ question[0]['id'] }}/new-comment">Add New Comment</a><br>
+    <a href="/question/{{ question[0]['id'] }}/delete">Delete Question</a>
+    <br>
+    <br>
+    <a href="/">Back to all questions</a>
 
 {% endblock %}

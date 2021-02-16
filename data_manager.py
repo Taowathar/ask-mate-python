@@ -52,7 +52,6 @@ def get_question(cursor: RealDictCursor, question_id) -> list:
     return cursor.fetchall()
 
 
-
 @connection.connection_handler
 def get_answers(cursor: RealDictCursor, question_id) -> list:
     query = f"""
@@ -87,25 +86,26 @@ def get_id(cursor: RealDictCursor) -> list:
 def update_question(cursor: RealDictCursor, question_id, updated_question) -> list:
     query = f"""
         UPDATE question
-        SET submission_time = '{updated_question['submission_time']}',
-        view_number = '{updated_question['view_number']}',
-        vote_number = '{updated_question['vote_number']}',
-        title = '{updated_question['title']}',
-        message = '{updated_question['message']}',
-        image = '{updated_question['image']}'
+        SET submission_time = %(submission_time)s,
+        view_number = %(view_number)s,
+        vote_number = %(vote_number)s,
+        title = %(title)s,
+        message = %(message)s,
+        image = %(image)s
         WHERE id = {question_id}"""
-    cursor.execute(query)
+    cursor.execute(query, updated_question)
+
 
 @connection.connection_handler
-def update_answer(cursor: RealDictCursor, question_id, updated_answer) -> list:
+def update_answer(cursor: RealDictCursor, answer_id, updated_answer) -> list:
     query = f"""
         UPDATE answer
-        SET submission_time = '{updated_answer['submission_time']}',
-        vote_number = '{updated_answer['vote_number']}',
-        answer = '{updated_answer['answer']}',
-        image = '{updated_answer['image']}'
-        WHERE id = {question_id}"""
-    cursor.execute(query)
+        SET submission_time = %(submission_time)s,
+        vote_number = %(vote_number)s,
+        message = %(message)s,
+        image = %(image)s
+        WHERE id = {answer_id}"""
+    cursor.execute(query, updated_answer)
 
 
 @connection.connection_handler
@@ -141,4 +141,69 @@ def update_answer_vote(cursor: RealDictCursor, answer_id, updated_vote) -> list:
         UPDATE answer
         SET vote_number = {updated_vote}
         WHERE id = {answer_id}"""
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def add_new_comment_to_question(cursor: RealDictCursor, comment) -> list:
+    query = f"""
+        INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
+        VALUES (%(question_id)s, %(answer_id)s,%(message)s, %(submission_time)s, %(edited_count)s)"""
+    cursor.execute(query, comment)
+
+
+@connection.connection_handler
+def get_question_comments(cursor: RealDictCursor, question_id) -> list:
+    query = f"""
+        SELECT *
+        FROM comment
+        WHERE question_id = {question_id}"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def add_new_comment_to_answer(cursor: RealDictCursor, comment) -> list:
+    query = f"""
+        INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
+        VALUES (%(question_id)s, %(answer_id)s,%(message)s, %(submission_time)s, %(edited_count)s)"""
+    cursor.execute(query, comment)
+
+
+@connection.connection_handler
+def get_comments(cursor: RealDictCursor) -> list:
+    query = f"""
+        SELECT *
+        FROM comment
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_comment(cursor: RealDictCursor, comment_id) -> list:
+    query = f"""
+        SELECT *
+        FROM comment
+        WHERE id = {comment_id}"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def edit_comment(cursor: RealDictCursor, comment_id, updated_comment) -> list:
+    query = f"""
+        UPDATE comment
+        SET message = %(message)s,        
+        submission_time = %(submission_time)s,
+        edited_count = %(edited_count)s
+        WHERE id = {comment_id}"""
+    cursor.execute(query, updated_comment)
+
+
+@connection.connection_handler
+def delete_comment(cursor: RealDictCursor, comment_id) -> list:
+    query = f"""
+        DELETE FROM comment
+         WHERE id = {comment_id}"""
     cursor.execute(query)
