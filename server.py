@@ -147,8 +147,36 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    questions = data_manager.get_questions()
-    return render_template('index.html', questions=questions)
+    sort_types = {'Title': 'title', 'Submission Time': 'submission_time', 'Message': 'message', 'Number of views': 'view_number', 'Number of votes': 'vote_number'}
+    directions = {'Ascending': 'ASC', 'Descending': 'DESC'}
+    sorting = request.args.get('sorting')
+    sorting_direction = request.args.get('sorting_direction')
+    if sorting is not None:
+        questions = data_manager.get_questions(sort_types[sorting], directions[sorting_direction])
+    else:
+        sorting = 'title'
+        sorting_direction = 'ASC'
+        questions = data_manager.get_questions(sorting, sorting_direction)
+    return render_template('index.html', questions=questions, sort_types=sort_types.keys(), directions=directions.keys())
+
+
+@app.route('/question', methods=['GET', 'POST'])
+def add_question():
+    submission_time = util.get_submission_time()
+    if request.method == 'POST':
+        filename = data_manager.save_image(app)
+        question = {'submission_time': submission_time, 'view_number': 0, 'vote_number': 0,
+                    'title': request.form['title'], 'message': request.form['message'], 'image': filename}
+        data_manager.add_new_question(question)
+        return redirect(url_for('display', question_id=new_id))
+    return render_template('question.html')
+
+
+@app.route('/question/<int:question_id>', methods=['GET'])
+def display(question_id):
+    question = data_manager.get_question(question_id)
+    answers = data_manager.get_answers(question_id + 1)
+    return render_template('details.html', question=question, answers=answers)
 
 
 if __name__ == "__main__":

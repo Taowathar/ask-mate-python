@@ -6,11 +6,11 @@
 
 {% block body %}
 
-        <h1>{{ question['title'] }}</h1>
-        <p>{{ question['message'] }}</p>
+        <h1>{{ question[0]['title'] }}</h1>
+        <p>{{ question[0]['message'] }}</p>
         <br>
-        {% if question['image'] != '' %}
-            <img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="600">
+        {% if question[0]['image'] != None %}
+            <img src='{{ url_for('static', filename='Images/'+ question[0]['image']) }}' width="600">
         {% else %}
 
         {% endif %}
@@ -31,25 +31,21 @@
                 </tr>
             </thead>
             <tbody>
-                {% set count = {'value': 0} %}
                 {% for answer in answers %}
-                    {% if answer['question_id'] == question['id'] %}
                         <tr>
                             <td>{{ answer['id'] }}</td>
-                            <td>{{ dates[answer['question_id']][count['value']] }}</td>
-                            {% if count.update({'value': (count.value + 1)}) %} {% endif %}
+                            <td>{{ answer['submission_time'] }}</td>
                             <td>{{ answer['vote_number'] }}</td>
                             <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_up">+</a></td>
                             <td><a class='vote' href="/answer/{{ answer['id'] }}/vote_down">-</a></td>
                             <td>{{ answer['message'] }}</td>
-                            {% if answer['image'] != '' %}
+                            {% if answer['image'] != None %}
                                 <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
                             {% else %}
                                 <td></td>
                             {% endif %}
                             <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
                         </tr><br>
-                    {% endif %}
                 {% endfor %}
             </tbody>
          </table>

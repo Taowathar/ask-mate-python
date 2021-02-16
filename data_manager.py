@@ -44,19 +44,60 @@ from psycopg2.extras import RealDictCursor
 #                              'message': answer['message'], 'image': answer['image']})
 #
 #
-# def save_image(app):
-#     file = request.files['image']
-#     filename = secure_filename(file.filename)
-#     if file.filename != '':
-#         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#     return filename
-#
+def save_image(app):
+    file = request.files['image']
+    filename = secure_filename(file.filename)
+    if file.filename != '':
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return filename
+
 
 @connection.connection_handler
-def get_questions(cursor: RealDictCursor) -> list:
-    query = """
+def get_questions(cursor: RealDictCursor, sort: str, direction: str) -> list:
+    query = f"""
         SELECT *
         FROM question
-        ORDER BY id"""
+        ORDER BY {sort} {direction}"""
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def add_new_question(cursor: RealDictCursor, question) -> list:
+    query = f"""
+        INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+        VALUES ({question['submission_time']}, {question['view_number']}, {question['vote_number']},
+                {question['title']}, {question['message']}, {question['image']})"""
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def add_new_answer(cursor: RealDictCursor, answer) -> list:
+    query = f"""
+        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+        VALUES ({answer['submission_time']}, {answer['vote_number']},
+                {answer['question_id']}, {answer['message']}, {answer['image']})"""
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def get_question(cursor: RealDictCursor, question_id) -> list:
+    query = f"""
+        SELECT *
+        FROM question
+        WHERE id = {question_id}"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+
+@connection.connection_handler
+def get_answers(cursor: RealDictCursor, question_id) -> list:
+    query = f"""
+        SELECT *
+        FROM answer
+        WHERE question_id = {question_id}
+        ORDER BY submission_time DESC"""
+    cursor.execute(query)
+    return cursor.fetchall()
+    
