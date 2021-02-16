@@ -1,25 +1,25 @@
 {% extends 'layout.html' %}
 
 
-{% block title %}{{ 'Update question' if questions else 'Add New Question' }}{% endblock %}
+{% block title %}{{ 'Update question' if question else 'Add New Question' }}{% endblock %}
 
 {% block body %}
 
-    <h1>{{ 'Update Question' if questions else 'Add New Question' }}</h1>
+    <h1>{{ 'Update Question' if question else 'Add New Question' }}</h1>
 
     <form action="" method="post" enctype="multipart/form-data">
 
         <label for="question-input">Question:</label><br>
-        <textarea id="question-input" name="title" rows="4" cols="60">{{ questions[question_id]['title'] if questions }}</textarea>
+        <textarea id="question-input" name="title" rows="4" cols="60">{{ question[0]['title'] if question }}</textarea>
         <br>
         <label for="message-input">Message:</label><br>
-        <textarea id="message-input" name="message" rows="4" cols="60">{{ questions[question_id]['message'] if questions }}</textarea>
+        <textarea id="message-input" name="message" rows="4" cols="60">{{ question[0]['message'] if question }}</textarea>
         <br>
         <label for="img">Select image:</label>
         <input type="file" id="img" name="image" accept="image/*">
         <br>
         <br>
-        <button type="submit">{{ 'Update Question' if questions else 'Post question'}}</button>
+        <button type="submit">{{ 'Update Question' if question else 'Post question'}}</button>
 
 
 

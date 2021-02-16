@@ -29,9 +29,9 @@
                 <td>Submission time</td>
                 <td>View number</td>
                 <td>Votes</td>
-                <td>Title</td>
                 <td>Vote Up</td>
                 <td>Vote Down</td>
+                <td>Title</td>
                 <td>Message</td>
                 <td>Image</td>
             </tr>
@@ -41,14 +41,13 @@
                 <tr>
                     <td>{{ question['id'] }}</td>
                     <td>{{ question['submission_time'] }}</td>
-{#                    <td>{{ dates[loop.index - 1] }}</td>#}
                     <td>{{ question['view_number'] }}</td>
                     <td>{{ question['vote_number'] }}</td>
                     <td><a class='vote' href="/question/{{ question['id'] }}/vote_up">+</a></td>
                     <td><a class='vote' href="/question/{{ question['id'] }}/vote_down">-</a></td>
                     <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
                     <td>{{ question['message'] }}</td>
-                    {%  if question['image'] != None %}
+                    {%  if question['image'] != None and question['image'] != '' %}
                         <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
                     {% else %}
                         <td></td>
