@@ -118,7 +118,7 @@ def update_question_vote(question_id):
     else:
         current_vote -= 1
     data_manager.update_question_vote(question_id, current_vote)
-    return redirect('/')
+    return redirect('/list')
 
 
 @app.route('/answer/<int:answer_id>/vote_up')
