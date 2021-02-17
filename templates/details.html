@@ -9,7 +9,7 @@
     <h1>{{ question[0]['title'] }}</h1>
     Tags:
     {% for tag in question_tags %}
-        {{ tag['name'] }}
+        {{ tag['name'] }} <a id="X" href="/question/{{ question[0]['id'] }}/tag/{{ tag['tag_id'] }}/delete">X</a>
     {% endfor %}
     <p>{{ question[0]['message'] }}</p>
     <br>

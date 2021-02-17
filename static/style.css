@@ -12,6 +12,34 @@ td {
     text-decoration: none;
 }
 
+* {
+  font-family: sans-serif;
+}
+
+.content-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-table thead tr {
+  text-align: left;
+  font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+  padding: 12px 15px;
+}
+
+.content-table tbody tr.active-row {
+  font-weight: bold;
+}
+
 html,
 body {
 	height: 100%;
@@ -19,7 +47,7 @@ body {
 
 body {
 	margin: 0;
-	background: linear-gradient(45deg, #4676a0, #2c8230);
+	background: linear-gradient(45deg, #3d972a, #a01e1e);
 	font-family: sans-serif;
 	font-weight: 100;
 }
@@ -46,6 +74,11 @@ a:link, a:visited {
 	border: 2px solid #a5a5a5;
 }
 
+#X {
+	border: none;
+}
+
+
 th,
 td {
 	padding: 15px;
@@ -65,15 +98,15 @@ thead {
 
 tbody {
 	tr {
-		&:hover {
-			background-color: rgba(255,255,255,0.3);
+	&:hover {
+		 background-color: rgba(255,255,255,0.3);
 		}
 	}
 	td {
 		position: relative;
 		&:hover {
 			&:before {
-				content: "";
+				 content: "";
 				position: absolute;
 				left: 0;
 				right: 0;

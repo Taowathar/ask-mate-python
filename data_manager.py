@@ -248,7 +248,7 @@ def get_all_tags(cursor: RealDictCursor) -> list:
 @connection.connection_handler
 def get_question_tags(cursor: RealDictCursor, question_id) -> list:
     query = f"""
-        SELECT name
+        SELECT *
         FROM question_tag
         JOIN tag
         ON tag.id = question_tag.tag_id
@@ -266,6 +266,22 @@ def get_tag_id_by_name(cursor: RealDictCursor, tag_name) -> list:
         WHERE name = %(tag_name)s"""
     cursor.execute(query, {'tag_name': tag_name})
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def delete_tag(cursor: RealDictCursor, tag_id) -> list:
+    query = f"""
+        DELETE FROM tag
+         WHERE id = {tag_id}"""
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def delete_question_tag(cursor: RealDictCursor, tag_id) -> list:
+    query = f"""
+        DELETE FROM question_tag
+         WHERE tag_id = {tag_id}"""
+    cursor.execute(query)
 
 
 @connection.connection_handler
@@ -289,9 +305,6 @@ def search_answer(cursor: RealDictCursor, search_phrase) -> list:
         """
     cursor.execute(query)
     return cursor.fetchall()
-
-
-
 
 
 def get_ids(id_list, id_type, ids=[]):
