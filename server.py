@@ -10,18 +10,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route("/")
+@app.route("/list")
 def index():
-    sort_types = {'Title': 'title', 'Submission Time': 'submission_time', 'Message': 'message',
-                  'Number of views': 'view_number', 'Number of votes': 'vote_number'}
-    directions = {'Ascending': 'ASC', 'Descending': 'DESC'}
-    sorting = request.args.get('sorting')
-    sorting_direction = request.args.get('sorting_direction')
-    if sorting is not None:
-        questions = data_manager.get_questions(sort_types[sorting], directions[sorting_direction])
+    if request.path == '/':
+        questions, sort_types, directions = util.sorter(data_manager.get_latest_questions)
+        return render_template('index.html', questions=questions, latest_questions=questions)
     else:
-        sorting = 'submission_time'
-        sorting_direction = 'DESC'
-        questions = data_manager.get_questions(sorting, sorting_direction)
+        questions, sort_types, directions = util.sorter(data_manager.get_questions)
     return render_template('index.html', questions=questions, sort_types=sort_types.keys(), directions=directions.keys())
 
 

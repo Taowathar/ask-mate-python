@@ -1,27 +1,29 @@
 {% extends 'layout.html' %}
 
-{% block title %}Index{% endblock %}
+{% block title %}{{ 'Latest questions' if latest_questions else 'Index'}}{% endblock %}
 
 {% block body %}
-    <h1>All questions</h1>
+    <h1>{{ 'Latest Questions'if latest_questions else 'All Questions' }}</h1>
     <table>
         <thead>
-            <tr>
-                <form action='/' method="get" enctype="multipart/form-data">
-                    <label for="sorting">Sort by:</label>
-                    <select name="sorting" id="sorting" required>
-                        {% for type in sort_types %}
-                            <option value="{{ type }}" {{ "selected" if sorting == type }}>{{ type }}</option>
-                        {% endfor %}
-                    </select>
-                   <select name="sorting_direction" id="sorting_direction" required>
-                        {% for direction in directions %}
-                            <option value="{{ direction }}" {{ "selected" if sorting_direction == direction }}>{{ direction }}</option>
-                        {% endfor %}
-                   </select>
-                   <button type="submit" name="submit" id="submit">Sort!</button>
-                </form>
-               </tr>
+            {% if not latest_questions %}
+                <tr>
+                    <form action='/list' method="get" enctype="multipart/form-data">
+                        <label for="sorting">Sort by:</label>
+                        <select name="sorting" id="sorting" required>
+                            {% for type in sort_types %}
+                                <option value="{{ type }}" {{ "selected" if sorting == type }}>{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                       <select name="sorting_direction" id="sorting_direction" required>
+                            {% for direction in directions %}
+                                <option value="{{ direction }}" {{ "selected" if sorting_direction == direction }}>{{ direction }}</option>
+                            {% endfor %}
+                       </select>
+                       <button type="submit" name="submit" id="submit">Sort!</button>
+                    </form>
+                   </tr>
+            {% endif %}
             <br>
             <br>
             <tr>
@@ -57,5 +59,9 @@
         </tbody>
     </table>
     <br>
-    <a href="/question">Add question</a>
+    {% if latest_questions %}
+        <a href="/list">List All Questions</a>
+    {% else %}
+        <a href="/question">Add question</a>
+    {% endif %}
 {% endblock %}

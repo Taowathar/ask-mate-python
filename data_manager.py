@@ -26,6 +26,17 @@ def get_questions(cursor: RealDictCursor, sort: str, direction: str) -> list:
 
 
 @connection.connection_handler
+def get_latest_questions(cursor: RealDictCursor, sort: str, direction: str) -> list:
+    query = f"""
+        SELECT *
+        FROM question
+        ORDER BY {sort} {direction}
+        LIMIT 5"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
 def add_new_question(cursor: RealDictCursor, question: dict) -> list:
     query = f"""
         INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
