@@ -19,7 +19,7 @@ body {
 
 body {
 	margin: 0;
-	background: linear-gradient(45deg, #a04949, #2c3582);
+	background: linear-gradient(45deg, #4676a0, #2c8230);
 	font-family: sans-serif;
 	font-weight: 100;
 }
@@ -38,8 +38,12 @@ table {
 	box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
-a {
-    color: #16164b;
+a:link, a:visited {
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+	border: 2px solid #a5a5a5;
 }
 
 th,

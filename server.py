@@ -92,9 +92,9 @@ def display(question_id):
                         'vote_number': question[0]['vote_number'], 'title': question[0]['title'],
                         'message': question[0]['message'], 'image': question[0]['image']}
     data_manager.update_question(question_id, updated_question)
-    # question_tags = data_manager.get_question_tags(question_id)
+    question_tags = data_manager.get_question_tags(question_id)
     return render_template('details.html', question=question, answers=answers, question_comments=question_comments,
-                           answer_comments=answer_comments)
+                           answer_comments=answer_comments, question_tags=question_tags)
 
 
 @app.route('/question/<int:question_id>/new-answer', methods=['GET', 'POST'])
@@ -183,15 +183,31 @@ def delete_comment(comment_id):
 
 @app.route('/question/<int:question_id>/new-tag', methods=['GET', 'POST'])
 def add_tag(question_id):
-    tag_id = data_manager.get_tag_id()[0]['max'] + 1
     if request.method == 'POST':
         new_tag = {'name': request.form['tag']}
-        new_question_tag = {'question_id': question_id, 'tag_id': tag_id}
         data_manager.add_new_tag(new_tag)
+        tag_id = data_manager.get_tag_id_by_name(new_tag['name'])[0]['id']
+        new_question_tag = {'question_id': question_id, 'tag_id': tag_id}
         data_manager.add_new_tag_to_question(new_question_tag)
         return redirect(url_for('display', question_id=question_id))
     all_tag = data_manager.get_all_tags()
     return render_template('add-tag.html', question_id=question_id, all_tag=all_tag)
+
+
+@app.route('/search')
+def search():
+    no_results = True
+    sorting = 'submission_time'
+    sorting_direction = 'DESC'
+    questions = data_manager.get_questions(sorting, sorting_direction)
+    search_phrase = request.args.get('search_phrase')
+    searched_question_ids_list = data_manager.search_question(search_phrase)
+    searched_answer_ids_list = data_manager.search_answer(search_phrase)
+    searched_ids = data_manager.get_ids(searched_question_ids_list, "question")
+    data_manager.get_ids(searched_answer_ids_list, "answer")
+    if searched_ids:
+        no_results = False
+    return render_template('search.html', searched_ids=searched_ids, questions=questions, no_results=no_results)
 
 
 if __name__ == "__main__":
