@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block title %}Search results{% endblock %}
+
+{% block body %}
+    <h1>Search results</h1>
+    {% if no_results == True %}
+        <p>No results</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>Submission time</td>
+                    <td>View number</td>
+                    <td>Votes</td>
+                    <td>Vote Up</td>
+                    <td>Vote Down</td>
+                    <td>Title</td>
+                    <td>Message</td>
+                    <td>Image</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for question in questions %}
+                        {% if question['id'] in searched_ids %}
+                            {% for item in searched_ids %}
+                                {{ searched_ids.remove(item) }}
+                            {% endfor %}
+                            <tr>
+                                <td>{{ question['id'] }}</td>
+                                <td>{{ question['submission_time'] }}</td>
+                                <td>{{ question['view_number'] }}</td>
+                                <td>{{ question['vote_number'] }}</td>
+                                <td><a class='vote' href="/question/{{ question['id'] }}/vote_up">+</a></td>
+                                <td><a class='vote' href="/question/{{ question['id'] }}/vote_down">-</a></td>
+                                <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                                <td>{{ question['message'] }}</td>
+                                {%  if question['image'] != None and question['image'] != '' %}
+                                    <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+    <a href="/list">Back to all questions</a>
+{% endblock %}

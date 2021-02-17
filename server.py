@@ -185,10 +185,16 @@ def delete_comment(comment_id):
 def add_tag(question_id):
     if request.method == 'POST':
         new_tag = {'name': request.form['tag']}
-        data_manager.add_new_tag(new_tag)
-        tag_id = data_manager.get_tag_id_by_name(new_tag['name'])[0]['id']
-        new_question_tag = {'question_id': question_id, 'tag_id': tag_id}
-        data_manager.add_new_tag_to_question(new_question_tag)
+        all_tag_names = [tag_name['name'] for tag_name in data_manager.get_all_tags()]
+        if new_tag['name'] in all_tag_names:
+            tag_id = data_manager.get_tag_id_by_name(new_tag['name'])[0]['id']
+            new_question_tag = {'question_id': question_id, 'tag_id': tag_id}
+            data_manager.add_new_tag_to_question(new_question_tag)
+        else:
+            data_manager.add_new_tag(new_tag)
+            tag_id = data_manager.get_tag_id_by_name(new_tag['name'])[0]['id']
+            new_question_tag = {'question_id': question_id, 'tag_id': tag_id}
+            data_manager.add_new_tag_to_question(new_question_tag)
         return redirect(url_for('display', question_id=question_id))
     all_tag = data_manager.get_all_tags()
     return render_template('add-tag.html', question_id=question_id, all_tag=all_tag)

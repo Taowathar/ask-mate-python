@@ -267,15 +267,6 @@ def get_tag_id_by_name(cursor: RealDictCursor, tag_name) -> list:
     cursor.execute(query, {'tag_name': tag_name})
     return cursor.fetchall()
 
-#
-# @connection.connection_handler
-# def get_tag_id(cursor: RealDictCursor) -> list:
-#     query = f"""
-#         SELECT MAX(id)
-#         FROM tag"""
-#     cursor.execute(query)
-#     return cursor.fetchall()
-
 
 @connection.connection_handler
 def search_question(cursor: RealDictCursor, search_phrase) -> list:
