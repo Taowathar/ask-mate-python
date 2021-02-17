@@ -68,7 +68,7 @@ def delete_question(question_id):
     if question[0]['image'] != "":
         os.remove(f"static/Images/{question[0]['image']}")
     data_manager.delete_question(question_id)
-    return redirect('/')
+    return redirect('/list')
 
 
 @app.route('/answer/<answer_id>/delete')
