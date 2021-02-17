@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}Add Tag{% endblock %}
+
+{% block body %}
+
+    <h1>Add New Tag</h1>
+
+    Tags:
+        {% for tag in all_tag %}
+            {{ tag['name'] }}
+        {% endfor %}
+    <form action="" method="post" enctype="multipart/form-data">
+        <label for="tag">Tag name:</label><br>
+        <br>
+        <input id="tag" name="tag"><br>
+        <br>
+        <button type="submit">Add Tag</button>
+    </form>
+
+{% endblock %}

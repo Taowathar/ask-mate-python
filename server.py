@@ -88,10 +88,11 @@ def display(question_id):
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_comments()
     view_number = question[0]['view_number'] + 1
-    updated_question = {'id': question_id, 'submission_time': question[0]['submission_time'],'view_number': view_number,
+    updated_question = {'id': question_id, 'submission_time': question[0]['submission_time'], 'view_number': view_number,
                         'vote_number': question[0]['vote_number'], 'title': question[0]['title'],
                         'message': question[0]['message'], 'image': question[0]['image']}
     data_manager.update_question(question_id, updated_question)
+    # question_tags = data_manager.get_question_tags(question_id)
     return render_template('details.html', question=question, answers=answers, question_comments=question_comments,
                            answer_comments=answer_comments)
 
@@ -178,6 +179,19 @@ def delete_comment(comment_id):
     question_id = comment[0]['question_id']
     data_manager.delete_comment(comment_id)
     return redirect(url_for('display', question_id=question_id))
+
+
+@app.route('/question/<int:question_id>/new-tag', methods=['GET', 'POST'])
+def add_tag(question_id):
+    tag_id = data_manager.get_tag_id()[0]['max'] + 1
+    if request.method == 'POST':
+        new_tag = {'name': request.form['tag']}
+        new_question_tag = {'question_id': question_id, 'tag_id': tag_id}
+        data_manager.add_new_tag(new_tag)
+        data_manager.add_new_tag_to_question(new_question_tag)
+        return redirect(url_for('display', question_id=question_id))
+    all_tag = data_manager.get_all_tags()
+    return render_template('add-tag.html', question_id=question_id, all_tag=all_tag)
 
 
 if __name__ == "__main__":

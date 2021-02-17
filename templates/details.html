@@ -52,6 +52,7 @@
                 <th>Vote Down</th>
                 <th>Answer</th>
                 <th>Image</th>
+                <th>Tags</th>
                 <th>Update Answer</th>
                 <th>Delete Answer</th>
                 <th>Add Comments</th>
@@ -71,6 +72,11 @@
                         {% else %}
                             <td></td>
                         {% endif %}
+                        <td>
+                            {% for tag in question_tags %}
+                                {{ tag['name'] }}
+                            {% endfor %}
+                        </td>
                         <td><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
                         <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
                         <td><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
@@ -107,7 +113,8 @@
     <br>
     <a href="/question/{{ question[0]['id'] }}/edit">Edit Question</a><br>
     <a href="/question/{{ question[0]['id'] }}/new-comment">Add New Comment</a><br>
-    <a href="/question/{{ question[0]['id'] }}/delete">Delete Question</a>
+    <a href="/question/{{ question[0]['id'] }}/delete">Delete Question</a><br>
+    <a href="/question/{{ question[0]['id'] }}/new-tag">Add New Tag</a>
     <br>
     <br>
     <a href="/list">Back to all questions</a>

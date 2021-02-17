@@ -25,6 +25,15 @@
                    </tr>
             {% endif %}
             <br>
+            <tr>
+                <form action="/search" method="get" enctype="multipart/form-data">
+                    <label for ="search_phrase">Search: </label>
+                    <input type="text" name="search_phrase" id="search_box" required>
+
+                    <button type="submit" name="submit" id="submit">Search</button>
+                </form>
+            </tr>
+            <br>
             <br>
             <tr>
                 <td>ID</td>
