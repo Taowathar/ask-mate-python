@@ -64,6 +64,14 @@ def update_answer(answer_id):
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
+    data_manager.delete_question_tag_by_question_id(question_id)
+    data_manager.delete_comment_by_question_id(question_id)
+    answers = data_manager.get_answers(question_id)
+    for answer in answers:
+        data_manager.delete_comment_by_answer_id(answer['id'])
+        if answer['image'] != '':
+            os.remove(f"static/Images/{answer['image']}")
+    data_manager.delete_answer_by_question_id(question_id)
     question = data_manager.get_question(question_id)
     if question[0]['image'] != "":
         os.remove(f"static/Images/{question[0]['image']}")
@@ -202,25 +210,30 @@ def add_tag(question_id):
 
 @app.route('/question/<question_id>/tag/<tag_id>/delete')
 def delete_tag(question_id, tag_id):
-    data_manager.delete_question_tag(tag_id)
-    data_manager.delete_tag(tag_id)
+    data_manager.delete_question_tag(tag_id, question_id)
     return redirect(url_for('display', question_id=question_id))
 
 
 @app.route('/search')
 def search():
+    ids = []
     no_results = True
     sorting = 'submission_time'
     sorting_direction = 'DESC'
     questions = data_manager.get_questions(sorting, sorting_direction)
+    answers = data_manager.get_all_answers()
+
     search_phrase = request.args.get('search_phrase')
     searched_question_ids_list = data_manager.search_question(search_phrase)
     searched_answer_ids_list = data_manager.search_answer(search_phrase)
-    searched_ids = data_manager.get_ids(searched_question_ids_list, "question")
-    data_manager.get_ids(searched_answer_ids_list, "answer")
+    searched_ids = data_manager.get_ids(searched_question_ids_list, "question", ids)
+    data_manager.get_ids(searched_answer_ids_list, "answer", searched_ids)
+    answer_ids_list = data_manager.search_answer_ids(search_phrase)
+    answer_ids = data_manager.get_answer_ids(answer_ids_list)
     if searched_ids:
         no_results = False
-    return render_template('search.html', searched_ids=searched_ids, questions=questions, no_results=no_results)
+    return render_template('search.html', searched_ids=searched_ids, questions=questions,
+                           no_results=no_results, answers=answers, answer_ids=answer_ids)
 
 
 if __name__ == "__main__":

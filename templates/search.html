@@ -8,33 +8,20 @@
         <p>No results</p>
     {% else %}
         <table>
-            <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>Submission time</td>
-                    <td>View number</td>
-                    <td>Votes</td>
-                    <td>Vote Up</td>
-                    <td>Vote Down</td>
-                    <td>Title</td>
-                    <td>Message</td>
-                    <td>Image</td>
-                </tr>
-            </thead>
             <tbody>
                 <tr>
                     {% for question in questions %}
                         {% if question['id'] in searched_ids %}
-                            {% for item in searched_ids %}
-                                {{ searched_ids.remove(item) }}
-                            {% endfor %}
                             <tr>
-                                <td>{{ question['id'] }}</td>
+                                <td>Question</td>
+                                <td>Submission time</td>
+                                <td>Title</td>
+                                <td>Message</td>
+                                <td>Image</td>
+                            </tr>
+                            <tr>
+                                <td></td>
                                 <td>{{ question['submission_time'] }}</td>
-                                <td>{{ question['view_number'] }}</td>
-                                <td>{{ question['vote_number'] }}</td>
-                                <td><a class='vote' href="/question/{{ question['id'] }}/vote_up">+</a></td>
-                                <td><a class='vote' href="/question/{{ question['id'] }}/vote_down">-</a></td>
                                 <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
                                 <td>{{ question['message'] }}</td>
                                 {%  if question['image'] != None and question['image'] != '' %}
@@ -43,11 +30,36 @@
                                     <td></td>
                                 {% endif %}
                             </tr>
+                            <br>
+                            {% for answer in answers %}
+                                {% if answer['question_id'] == question['id'] %}
+                                    {% if answer['id'] in answer_ids %}
+                                        <tr>
+                                            <td>Answer</td>
+                                            <th>Submission time</th>
+                                            <th>Question title</th>
+                                            <th>Answer</th>
+                                            <th>Image</th>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>{{ answer['submission_time'] }}</td>
+                                            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                                            <td>{{ answer['message'] }}</td>
+                                            {% if answer['image'] != None and answer['image'] != '' %}
+                                                <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
                     {% endfor %}
                 </tr>
             </tbody>
         </table>
     {% endif %}
-    <a href="/list">Back to all questions</a>
+    <a href="/">Back to all questions</a>
 {% endblock %}

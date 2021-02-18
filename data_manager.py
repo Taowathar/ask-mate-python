@@ -16,6 +16,15 @@ def save_image(app):
 
 
 @connection.connection_handler
+def get_all_answers(cursor: RealDictCursor) -> list:
+    query = """
+        SELECT *
+        FROM answer"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
 def get_questions(cursor: RealDictCursor, sort: str, direction: str) -> list:
     query = f"""
         SELECT *
@@ -269,19 +278,43 @@ def get_tag_id_by_name(cursor: RealDictCursor, tag_name) -> list:
 
 
 @connection.connection_handler
-def delete_tag(cursor: RealDictCursor, tag_id) -> list:
+def delete_question_tag(cursor: RealDictCursor, tag_id, question_id) -> list:
     query = f"""
-        DELETE FROM tag
-         WHERE id = {tag_id}"""
+        DELETE FROM question_tag
+         WHERE tag_id = {tag_id} AND question_id = {question_id}"""
     cursor.execute(query)
 
 
 @connection.connection_handler
-def delete_question_tag(cursor: RealDictCursor, tag_id) -> list:
-    query = f"""
+def delete_answer_by_question_id(cursor: RealDictCursor, question_id) -> list:
+    query = """
+        DELETE FROM answer
+        WHERE question_id = %(question_id)s"""
+    cursor.execute(query, {'question_id': question_id})
+
+
+@connection.connection_handler
+def delete_comment_by_question_id(cursor: RealDictCursor, question_id) -> list:
+    query = """
+        DELETE FROM comment
+        WHERE question_id = %(question_id)s"""
+    cursor.execute(query, {'question_id': question_id})
+
+
+@connection.connection_handler
+def delete_comment_by_answer_id(cursor: RealDictCursor, answer_id) -> list:
+    query = """
+        DELETE FROM comment
+        WHERE answer_id = %(answer_id)s"""
+    cursor.execute(query, {'answer_id': answer_id})
+
+
+@connection.connection_handler
+def delete_question_tag_by_question_id(cursor: RealDictCursor, question_id) -> list:
+    query = """
         DELETE FROM question_tag
-         WHERE tag_id = {tag_id}"""
-    cursor.execute(query)
+        WHERE question_id = %(question_id)s"""
+    cursor.execute(query, {'question_id': question_id})
 
 
 @connection.connection_handler
@@ -307,10 +340,28 @@ def search_answer(cursor: RealDictCursor, search_phrase) -> list:
     return cursor.fetchall()
 
 
-def get_ids(id_list, id_type, ids=[]):
+@connection.connection_handler
+def search_answer_ids(cursor: RealDictCursor, search_phrase) -> list:
+    query = f"""
+        SELECT id
+        FROM answer
+        WHERE message LIKE '%{search_phrase}%'
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def get_ids(id_list, id_type, ids):
     for item in id_list:
         if id_type == "question":
             ids.append(item['id'])
         else:
             ids.append(item['question_id'])
+    return ids
+
+
+def get_answer_ids(id_list):
+    ids = []
+    for item in id_list:
+        ids.append(item['id'])
     return ids
