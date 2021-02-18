@@ -13,17 +13,17 @@
                     {% for question in questions %}
                         {% if question['id'] in searched_ids %}
                             <tr>
-                                <td>Question</td>
-                                <td>Submission time</td>
-                                <td>Title</td>
-                                <td>Message</td>
-                                <td>Image</td>
+                                <th>Question</th>
+                                <th>Submission time</th>
+                                <th>Title</th>
+                                <th>Message</th>
+                                <th>Image</th>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>{{ question['submission_time'] }}</td>
-                                <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
-                                <td>{{ question['message'] }}</td>
+                                <td><a href="/question/{{ question['id'] }}">{{ question['title'] | safe }}</a></td>
+                                <td>{{ question['message'] | safe }}</td>
                                 {%  if question['image'] != None and question['image'] != '' %}
                                     <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
                                 {% else %}
@@ -35,7 +35,7 @@
                                 {% if answer['question_id'] == question['id'] %}
                                     {% if answer['id'] in answer_ids %}
                                         <tr>
-                                            <td>Answer</td>
+                                            <th>Answer</th>
                                             <th>Submission time</th>
                                             <th>Question title</th>
                                             <th>Answer</th>
@@ -44,8 +44,8 @@
                                         <tr>
                                             <td></td>
                                             <td>{{ answer['submission_time'] }}</td>
-                                            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
-                                            <td>{{ answer['message'] }}</td>
+                                            <td><a href="/question/{{ question['id'] }}">{{ question['title'] | safe }}</a></td>
+                                            <td>{{ answer['message'] | safe }}</td>
                                             {% if answer['image'] != None and answer['image'] != '' %}
                                                 <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
                                             {% else %}
@@ -61,5 +61,5 @@
             </tbody>
         </table>
     {% endif %}
-    <a href="/">Back to all questions</a>
+    <a href="/list">Back to all questions</a>
 {% endblock %}

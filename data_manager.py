@@ -176,7 +176,7 @@ def get_question_comments(cursor: RealDictCursor, question_id) -> list:
     query = f"""
         SELECT *
         FROM comment
-        WHERE question_id = {question_id}"""
+        WHERE question_id = {question_id} AND answer_id is null """
     cursor.execute(query)
     return cursor.fetchall()
 
@@ -365,3 +365,24 @@ def get_answer_ids(id_list):
     for item in id_list:
         ids.append(item['id'])
     return ids
+
+
+def highlight_words_message(sentence_list, phrase):
+    for sentence in sentence_list:
+        sentence['message'] = sentence['message'].replace(phrase, f"<mark>{phrase}</mark>")
+    return sentence_list
+
+
+def highlight_words_title(sentence_list, phrase):
+    for sentence in sentence_list:
+        sentence['title'] = sentence['title'].replace(phrase, f"<mark>{phrase}</mark>")
+    return sentence_list
+
+
+def highlight_questions(search_phrase):
+    questions = highlight_words_title(get_questions('submission_time', 'DESC'), search_phrase)
+    return highlight_words_message(questions, search_phrase)
+
+
+def highlight_answers(search_phrase):
+    return highlight_words_message(get_all_answers(), search_phrase)

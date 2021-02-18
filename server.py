@@ -218,22 +218,16 @@ def delete_tag(question_id, tag_id):
 def search():
     ids = []
     no_results = True
-    sorting = 'submission_time'
-    sorting_direction = 'DESC'
-    questions = data_manager.get_questions(sorting, sorting_direction)
-    answers = data_manager.get_all_answers()
-
     search_phrase = request.args.get('search_phrase')
-    searched_question_ids_list = data_manager.search_question(search_phrase)
-    searched_answer_ids_list = data_manager.search_answer(search_phrase)
-    searched_ids = data_manager.get_ids(searched_question_ids_list, "question", ids)
-    data_manager.get_ids(searched_answer_ids_list, "answer", searched_ids)
-    answer_ids_list = data_manager.search_answer_ids(search_phrase)
-    answer_ids = data_manager.get_answer_ids(answer_ids_list)
+    questions = data_manager.highlight_questions(search_phrase)
+    answers = data_manager.highlight_answers(search_phrase)
+    searched_ids = data_manager.get_ids(data_manager.search_question(search_phrase), "question", ids)
+    data_manager.get_ids(data_manager.search_answer(search_phrase), "answer", searched_ids)
     if searched_ids:
         no_results = False
-    return render_template('search.html', searched_ids=searched_ids, questions=questions,
-                           no_results=no_results, answers=answers, answer_ids=answer_ids)
+    return render_template('search.html', searched_ids=searched_ids, questions=questions, no_results=no_results,
+                           answer_ids=data_manager.get_answer_ids(data_manager.search_answer_ids(search_phrase)),
+                           search_phrase=search_phrase, answers=answers)
 
 
 if __name__ == "__main__":
