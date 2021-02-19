@@ -33,13 +33,13 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Submission time</th>
-                <th>View number</th>
-                <th>Votes</th>
-                <th>Vote Up</th>
-                <th>Vote Down</th>
-                <th>Title</th>
+                <th class="small" >ID</th>
+                <th class="submission" >Submission time</th>
+                <th class="small" >View number</th>
+                <th class="small" >Votes</th>
+                <th class="small" >Vote Up</th>
+                <th class="small" >Vote Down</th>
+                <th class="title" >Title</th>
                 <th>Message</th>
                 <th>Image</th>
             </tr>
@@ -61,6 +61,7 @@
                         <td></td>
                     {% endif %}
                 </tr>
+                <tr><td class="none"></td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -70,4 +71,6 @@
     {% else %}
         <a class="top-button" href="/question">Add question</a>
     {% endif %}
+    <br>
+    <br>
 {% endblock %}

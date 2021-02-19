@@ -9,13 +9,15 @@
 
     <form action="" method="post" enctype="multipart/form-data">
 
-        <label for="question-input">Question:</label><br>
+        <strong><label for="question-input">Question:</label></strong><br><br>
         <textarea id="question-input" name="title" rows="4" cols="60">{{ question[0]['title'] if question }}</textarea>
         <br>
-        <label for="message-input">Message:</label><br>
+        <br>
+        <strong><label for="message-input">Message:</label></strong><br><br>
         <textarea id="message-input" name="message" rows="4" cols="60">{{ question[0]['message'] if question }}</textarea>
         <br>
-        <label for="img">Select image:</label>
+        <br>
+        <strong><label for="img">Select image:  </label></strong>
         <input type="file" id="img" name="image" accept="image/*">
         <br>
         <br>

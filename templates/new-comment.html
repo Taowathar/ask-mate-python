@@ -8,7 +8,6 @@
     <h1>{{ 'Edit Comment' if comment else 'Add New Comment' }}</h1>
 
     <form action="" method="post" enctype="multipart/form-data">
-        <label for="comment_message">Comment:</label><br>
         <textarea id="comment_message" name="comment_message" rows="4" cols="60">{{ comment[0]['message'] if comment }}</textarea>
         <br>
         <button type="submit">{{ 'Update Comment' if comment else 'Post comment'}}</button>

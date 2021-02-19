@@ -14,8 +14,8 @@
                         {% if question['id'] in searched_ids %}
                             <tr>
                                 <th>Question</th>
-                                <th>Submission time</th>
-                                <th>Title</th>
+                                <th class="submission" >Submission time</th>
+                                <th class="title" >Title</th>
                                 <th>Message</th>
                                 <th>Image</th>
                             </tr>
@@ -36,8 +36,8 @@
                                     {% if answer['id'] in answer_ids %}
                                         <tr>
                                             <th>Answer</th>
-                                            <th>Submission time</th>
-                                            <th>Question title</th>
+                                            <th class="submission" >Submission time</th>
+                                            <th class="title" >Question title</th>
                                             <th>Answer</th>
                                             <th>Image</th>
                                         </tr>
@@ -61,5 +61,8 @@
             </tbody>
         </table>
     {% endif %}
+    <br>
     <a href="/list">Back to all questions</a>
+    <br>
+    <br>
 {% endblock %}
