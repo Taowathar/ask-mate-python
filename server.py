@@ -233,8 +233,26 @@ def search():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     if request.method == 'POST':
-        pass
+        submission_time = util.get_submission_time()
+        password = util.hash_password(request.form['password'])
+        user = {'name': request.form['username'], 'password': password, 'reg_date': submission_time,
+                'question_count': 0, 'answer_count': 0, 'comment_count': 0, 'reputation': 0}
+        data_manager.add_new_user(user)
+        return redirect(url_for('/list'))
     return render_template('registration.html')
+
+
+@app.route('/question', methods=['GET', 'POST'])
+def add_question():
+
+    if request.method == 'POST':
+        filename = data_manager.save_image(app)
+        question = {'submission_time': submission_time, 'view_number': 0, 'vote_number': 0,
+                    'title': request.form['title'], 'message': request.form['message'], 'image': filename}
+        data_manager.add_new_question(question)
+        new_id = data_manager.get_id()[0]['max']
+        return redirect(url_for('display', question_id=new_id))
+    return render_template('question.html')
 
 
 if __name__ == "__main__":
