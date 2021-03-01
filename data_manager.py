@@ -386,3 +386,10 @@ def highlight_questions(search_phrase):
 
 def highlight_answers(search_phrase):
     return highlight_words_message(get_all_answers(), search_phrase)
+
+
+@connection.connection_handler
+def usernames_and_passwords(cursor: RealDictCursor) -> list:
+    query = "SELECT name, password FROM users"
+    cursor.execute(query)
+    return cursor.fetchall()

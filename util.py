@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask import request
+import bcrypt
 
 
 def get_submission_time():
@@ -20,3 +21,8 @@ def sorter(query):
         sorting_direction = 'DESC'
         questions = query(sorting, sorting_direction)
     return questions, sort_types, directions
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)

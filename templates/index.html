@@ -12,6 +12,11 @@
                 <button type="submit" name="submit" id="submit">Search</button>
             </form>
         <br>
+        {% if session['loggedin'] %}
+            <a href="logout">Log out</a>
+        {% else %}
+            <a href="login">Login</a>
+        {% endif %}
         {% if not latest_questions %}
             <form class="sorting" action='/list' method="get" enctype="multipart/form-data">
 {#                <label for="sorting">Sort by:</label>#}
@@ -69,7 +74,9 @@
     {% if latest_questions %}
         <a class="top-button" href="/list">List All Questions</a>
     {% else %}
+        {% if session['loggedin'] %}
         <a class="top-button" href="/question">Add question</a>
+        {% endif %}
     {% endif %}
     <br>
     <br>
