@@ -257,6 +257,18 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        submission_time = util.get_submission_time()
+        password = util.hash_password(request.form['password'])
+        user = {'name': request.form['username'], 'password': password, 'reg_date': submission_time,
+                'question_count': 0, 'answer_count': 0, 'comment_count': 0, 'reputation': 0}
+        data_manager.add_new_user(user)
+        return redirect('/list')
+    return render_template('registration.html')
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',

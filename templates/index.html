@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>{{ 'Latest Questions'if latest_questions else 'All Questions' }}</h1>
+    <a href="/registration">Sign Up</a>
     <div class="top">
         <br>
             <form class="search" action="/search" method="get" enctype="multipart/form-data">
