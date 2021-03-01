@@ -393,3 +393,13 @@ def usernames_and_passwords(cursor: RealDictCursor) -> list:
     query = "SELECT name, password FROM users"
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def add_new_user(cursor: RealDictCursor, user) -> list:
+    query = """
+        INSERT INTO users (name, password, reg_date, question_count, answer_count, comment_count, reputation)
+        VALUES (%(name)s, %(password)s, %(reg_date)s, %(question_count)s, %(answer_count)s, %(comment_count)s,
+        %(reputation)s)"""
+    cursor.execute(query, user)
+
