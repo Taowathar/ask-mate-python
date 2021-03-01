@@ -230,6 +230,13 @@ def search():
                            search_phrase=search_phrase, answers=answers)
 
 
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        pass
+    return render_template('registration.html')
+
+
 if __name__ == "__main__":
     app.run(
         host='0.0.0.0',
