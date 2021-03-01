@@ -3,17 +3,18 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
+    <h1>Login</h1>
     <form action="" method="post" enctype="multipart/form-data">
         <label for="text">Username: </label>
-        <input type="text" id="text" name="username">
+        <input type="text" id="text" name="username" required><br><br>
         <br>
         <label for="text">Password: </label>
-        <input type="password" id="text" name="password">
+        <input type="password" id="text" name="password" required><br><br>
         <br>
         <button type="submit">Login</button>
     </form>
 
-    {% if error_message %}
-        <p>Wrong password!</p>
+    {% if error %}
+        <p>{{ error }}</p>
     {% endif %}
 {% endblock %}

@@ -388,12 +388,20 @@ def highlight_answers(search_phrase):
     return highlight_words_message(get_all_answers(), search_phrase)
 
 
-@connection.connection_handler
-def usernames_and_passwords(cursor: RealDictCursor) -> list:
-    query = "SELECT name, password FROM users"
-    cursor.execute(query)
-    return cursor.fetchall()
+# @connection.connection_handler
+# def get_usernames(cursor: RealDictCursor) -> list:
+#     query = "SELECT name FROM users"
+#     cursor.execute(query)
+#     return cursor.fetchall()
 
+
+@connection.connection_handler
+def get_password(cursor: RealDictCursor, username) -> list:
+    query = """SELECT password FROM users
+        WHERE name = %(name)s"""
+    cursor.execute(query, {'name': username})
+    return cursor.fetchall()
+    
 
 @connection.connection_handler
 def add_new_user(cursor: RealDictCursor, user) -> list:
@@ -402,4 +410,3 @@ def add_new_user(cursor: RealDictCursor, user) -> list:
         VALUES (%(name)s, %(password)s, %(reg_date)s, %(question_count)s, %(answer_count)s, %(comment_count)s,
         %(reputation)s)"""
     cursor.execute(query, user)
-

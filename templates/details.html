@@ -46,7 +46,7 @@
         </table>
     {% endif %}
     <br>
-    {% if session['loggedin'] %}
+    {% if session['username'] %}
     <a href="/question/{{ question[0]['id'] }}/new-answer">Add New Answer</a><br>
     {% endif %}
     {% if answers != [] %}

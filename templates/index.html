@@ -13,7 +13,7 @@
                 <button type="submit" name="submit" id="submit">Search</button>
             </form>
         <br>
-        {% if session['loggedin'] %}
+        {% if session['username'] %}
             <a href="logout">Log out</a>
         {% else %}
             <a href="login">Login</a>
@@ -75,7 +75,7 @@
     {% if latest_questions %}
         <a class="top-button" href="/list">List All Questions</a>
     {% else %}
-        {% if session['loggedin'] %}
+        {% if session['username'] %}
         <a class="top-button" href="/question">Add question</a>
         {% endif %}
     {% endif %}
