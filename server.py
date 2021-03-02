@@ -126,11 +126,15 @@ def add_answer(question_id):
 def update_question_vote(question_id):
     question = data_manager.get_question(question_id)
     current_vote = question[0]['vote_number']
+    current_reputation = data_manager.get_reputation(question[0]['user_id'])
     if request.path == '/question/' + str(question_id) + '/vote_up':
         current_vote += 1
+        new_reputation = current_reputation[0]['reputation'] + 5
     else:
         current_vote -= 1
+        new_reputation = current_reputation[0]['reputation'] - 2
     data_manager.update_question_vote(question_id, current_vote)
+    data_manager.update_reputation(question[0]['user_id'], new_reputation)
     return redirect('/list')
 
 
@@ -139,11 +143,15 @@ def update_question_vote(question_id):
 def vote_answer(answer_id):
     answer = data_manager.get_answer(answer_id)
     current_vote = answer[0]['vote_number']
+    current_reputation = data_manager.get_reputation(answer[0]['user_id'])
     if request.path == '/answer/' + str(answer_id) + '/vote_up':
         current_vote += 1
+        new_reputation = current_reputation[0]['reputation'] + 10
     else:
         current_vote -= 1
+        new_reputation = current_reputation[0]['reputation'] - 2
     data_manager.update_answer_vote(answer_id, current_vote)
+    data_manager.update_reputation(answer[0]['user_id'], new_reputation)
     return redirect(url_for('display', question_id=answer[0]['question_id']))
 
 

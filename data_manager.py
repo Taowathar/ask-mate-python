@@ -440,3 +440,22 @@ def get_id_of_user(cursor: RealDictCursor) -> list:
         """
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_reputation(cursor: RealDictCursor, user_id) -> list:
+    query = f"""
+        SELECT reputation
+        FROM users
+        WHERE id = {user_id}"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def update_reputation(cursor: RealDictCursor, user_id, reputation) -> list:
+    query = f"""
+        UPDATE users
+        SET reputation = {reputation}
+        WHERE id = {user_id}"""
+    cursor.execute(query)
