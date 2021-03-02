@@ -125,12 +125,15 @@ def display(question_id):
 @app.route('/question/<int:question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):
     submission_time = util.get_submission_time()
+    user_id = data_manager.get_id_of_user()[0]['id']
     if request.method == 'POST':
         filename = data_manager.save_image(app)
         new_answer = {'submission_time': submission_time, 'vote_number': 0, 'question_id': question_id,
                       'message': request.form['message-input'], 'image': filename,
-                      'user_id': data_manager.get_id_of_user()[0]['id']}
+                      'user_id': user_id}
         data_manager.add_new_answer(new_answer)
+        answer_count = data_manager.get_answer_count(user_id)[0]['answer_count']
+        data_manager.update_answer_count(answer_count + 1, user_id)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-answer.html')
 
