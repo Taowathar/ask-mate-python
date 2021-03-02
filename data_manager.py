@@ -442,6 +442,12 @@ def get_id_of_user(cursor: RealDictCursor) -> list:
     return cursor.fetchall()
 
 
+def get_all_users(cursor: RealDictCursor) -> list:
+    query = "SELECT * FROM users"
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
 @connection.connection_handler
 def get_reputation(cursor: RealDictCursor, user_id) -> list:
     query = f"""
@@ -459,3 +465,11 @@ def update_reputation(cursor: RealDictCursor, user_id, reputation) -> list:
         SET reputation = {reputation}
         WHERE id = {user_id}"""
     cursor.execute(query)
+
+
+def get_user_id_by_name(cursor: RealDictCursor, username) -> list:
+    query = """SELECT id FROM users
+        WHERE name = %(name)s"""
+    cursor.execute(query, {'name': username})
+    return cursor.fetchall()
+

@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block title %}User Page{% endblock %}
+
+{% block body %}
+    <h1>User page</h1>
+    <ul>
+        <li>User id: {{ user['id'] }}</li>
+        <li>User name: {{ user['name'] }}</li>
+        <li>Registration date: {{ user['reg_date'] }}</li>
+        <li>Count of asked questions: {{ user['question_count'] }}</li>
+        <li>Count of answers: {{ user['answer_count'] }}</li>
+        <li>Count of comments: {{ user['comment_count'] }}</li>
+        <li>Reputation: {{ user['reputation'] }}</li>
+    </ul>
+    <a href="/list">Back to all questions</a>
+{% endblock %}

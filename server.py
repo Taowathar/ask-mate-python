@@ -13,12 +13,23 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route("/")
 @app.route("/list")
 def index():
-    if request.path == '/':
-        questions, sort_types, directions = util.sorter(data_manager.get_latest_questions)
-        return render_template('index.html', questions=questions, latest_questions=questions)
+    if 'username' in session:
+        user_id = data_manager.get_user_id_by_name(session['username'])[0]['id']
+        if request.path == '/':
+            questions, sort_types, directions = util.sorter(data_manager.get_latest_questions)
+            return render_template('index.html', questions=questions, latest_questions=questions, user_id=user_id)
+        else:
+            questions, sort_types, directions = util.sorter(data_manager.get_questions)
+        return render_template('index.html', questions=questions, sort_types=sort_types.keys(),
+                               directions=directions.keys(), user_id=user_id)
     else:
-        questions, sort_types, directions = util.sorter(data_manager.get_questions)
-    return render_template('index.html', questions=questions, sort_types=sort_types.keys(), directions=directions.keys())
+        if request.path == '/':
+            questions, sort_types, directions = util.sorter(data_manager.get_latest_questions)
+            return render_template('index.html', questions=questions, latest_questions=questions)
+        else:
+            questions, sort_types, directions = util.sorter(data_manager.get_questions)
+        return render_template('index.html', questions=questions, sort_types=sort_types.keys(),
+                               directions=directions.keys())
 
 
 @app.route('/question', methods=['GET', 'POST'])
@@ -245,10 +256,12 @@ def search():
                            answer_ids=data_manager.get_answer_ids(data_manager.search_answer_ids(search_phrase)),
                            search_phrase=search_phrase, answers=answers)
 
+
 @app.route('/tags')
 def show_tags():
     show_tag = data_manager.get_all_used_tags()
     return render_template('tags.html', show_tag=show_tag)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -259,6 +272,7 @@ def login():
             if util.verify_password(password, data_manager.get_password(username)[0]['password']):
                 session['username'] = username
                 session['password'] = password
+                session['logged_in'] = True
                 flash('You were just logged in')
                 return redirect(url_for('index'))
             else:
@@ -273,6 +287,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session['logged_in'] = False
     flash('You were just logged out')
     return redirect(url_for('index'))
 
@@ -287,6 +302,18 @@ def registration():
         data_manager.add_new_user(user)
         return redirect('/list')
     return render_template('registration.html')
+
+
+@app.route('/users')
+def users():
+    list_of_users = data_manager.get_all_users()
+    return render_template('users.html', users=list_of_users)
+
+
+@app.route('/user/<user_id>')
+def user_page(user_id):
+    user = data_manager.get_all_users()[int(user_id) - 1]
+    return render_template('user_page.html', user=user)
 
 
 if __name__ == "__main__":

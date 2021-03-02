@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}Users{% endblock %}
+
+
+{% block body %}
+    <table>
+        <thead>
+            <th>User Name</th>
+            <th>Registration date</th>
+            <th>Count of asked questions</th>
+            <th>Count of answers</th>
+            <th>Count of comments</th>
+            <th>Reputation</th>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td><a href="/user/{{ user['id'] }}">{{ user['name'] }}</a></td>
+                    <td>{{ user['reg_date'] }}</td>
+                    <td>{{ user['question_count'] }}</td>
+                    <td>{{ user['answer_count'] }}</td>
+                    <td>{{ user['comment_count'] }}</td>
+                    <td>{{ user['reputation'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/list">Back to all questions</a>
+{% endblock %}
