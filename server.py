@@ -325,7 +325,8 @@ def users():
 @app.route('/user/<user_id>')
 def user_page(user_id):
     user = data_manager.get_all_users()[int(user_id) - 1]
-    return render_template('user_page.html', user=user)
+    questions = data_manager.get_user_questions(user_id)
+    return render_template('user_page.html', user=user, questions=questions)
 
 
 if __name__ == "__main__":

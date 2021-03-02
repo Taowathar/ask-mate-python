@@ -13,5 +13,29 @@
         <li>Count of comments: {{ user['comment_count'] }}</li>
         <li>Reputation: {{ user['reputation'] }}</li>
     </ul>
+    <br>
+    <h2>Questions:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Submission Time</th>
+                <th>Message</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+                <tr>
+                    <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                    <td>{{ question['submission_time'] }}</td>
+                    <td>{{ question['message'] }}</td>
+                    <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
     <a href="/list">Back to all questions</a>
 {% endblock %}

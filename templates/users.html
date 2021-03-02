@@ -7,12 +7,14 @@
 {% block body %}
     <table>
         <thead>
-            <th>User Name</th>
-            <th>Registration date</th>
-            <th>Count of asked questions</th>
-            <th>Count of answers</th>
-            <th>Count of comments</th>
-            <th>Reputation</th>
+            <tr>
+                <th>User Name</th>
+                <th>Registration date</th>
+                <th>Count of asked questions</th>
+                <th>Count of answers</th>
+                <th>Count of comments</th>
+                <th>Reputation</th>
+            </tr>
         </thead>
         <tbody>
             {% for user in users %}
