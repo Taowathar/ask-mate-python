@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for, session, escape
+from flask import Flask, render_template, redirect, request, url_for, session, flash
 import os
 import data_manager
 import util
@@ -237,27 +237,28 @@ def show_tags():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    usernames_and_passwords = data_manager.usernames_and_passwords()
-    error_message = False
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        for counter in range(len(usernames_and_passwords)):
-            if username == usernames_and_passwords[counter]['name']:
-                if util.verify_password(password, usernames_and_passwords[counter]['password']):
-                    session['username'] = username
-                    session['loggedin'] = True
-                    return redirect(url_for('index'))
-                error_message = True
+        if data_manager.get_password(username):
+            if util.verify_password(password, data_manager.get_password(username)[0]['password']):
+                session['username'] = username
+                session['password'] = password
+                flash('You were just logged in')
+                return redirect(url_for('index'))
             else:
-                error_message = True
-    return render_template('login.html', error_message=error_message)
+                error = 'Wrong password!'
+                return render_template('login.html', error=error)
+        else:
+            error = 'Wrong username!'
+            return render_template('login.html', error=error)
+    return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    session['loggedin'] = False
+    flash('You were just logged out')
     return redirect(url_for('index'))
 
 
