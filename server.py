@@ -229,6 +229,10 @@ def search():
                            answer_ids=data_manager.get_answer_ids(data_manager.search_answer_ids(search_phrase)),
                            search_phrase=search_phrase, answers=answers)
 
+@app.route('/tags')
+def show_tags():
+    show_tag = data_manager.get_all_tags()
+    return render_template('tags.html', show_tag=show_tag)
 
 if __name__ == "__main__":
     app.run(

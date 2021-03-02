@@ -47,6 +47,16 @@ CREATE TABLE comment (
     edited_count integer
 );
 
+CREATE TABLE users (
+    id             serial NOT NULL,
+    name           text,
+    password       text,
+    reg_date       timestamp without time zone,
+    question_count integer,
+    answer_count   integer,
+    comment_count  integer,
+    reputation     integer
+);
 
 DROP TABLE IF EXISTS public.question_tag;
 CREATE TABLE question_tag (
@@ -60,6 +70,17 @@ CREATE TABLE tag (
     name text
 );
 
+ALTER TABLE question
+    ADD user_id integer;
+
+ALTER TABLE answer
+    ADD user_id integer;
+
+ALTER TABLE comment
+    ADD user_id integer;
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY answer
     ADD CONSTRAINT pk_answer_id PRIMARY KEY (id);
