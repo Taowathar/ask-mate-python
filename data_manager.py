@@ -498,3 +498,19 @@ def update_answer_count(cursor: RealDictCursor, answer_count, user_id) -> list:
         SET answer_count = %(answer_count)s
         WHERE id = %(id)s"""
     cursor.execute(query, {'answer_count': answer_count, 'id': user_id})
+
+
+@connection.connection_handler
+def get_comment_count(cursor: RealDictCursor, user_id):
+    query = "SELECT comment_count FROM users WHERE id = %(user_id)s"
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def update_comment_count(cursor: RealDictCursor, comment_count, user_id) -> list:
+    query = """
+        UPDATE users
+        SET comment_count = %(comment_count)s
+        WHERE id = %(id)s"""
+    cursor.execute(query, {'comment_count': comment_count, 'id': user_id})

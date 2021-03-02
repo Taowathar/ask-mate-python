@@ -175,11 +175,14 @@ def vote_answer(answer_id):
 @app.route('/question/<int:question_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_question(question_id):
     submission_time = util.get_submission_time()
+    user_id = data_manager.get_id_of_user()[0]['id']
     if request.method == 'POST':
         new_comment = {'question_id': question_id, 'answer_id': None, 'message': request.form['comment_message'],
                        'submission_time': submission_time,
-                       'edited_count': 0, 'user_id': data_manager.get_id_of_user()[0]['id']}
+                       'edited_count': 0, 'user_id': user_id}
         data_manager.add_new_comment_to_question(new_comment)
+        comment_count = data_manager.get_comment_count(user_id)[0]['comment_count']
+        data_manager.update_comment_count(comment_count + 1, user_id)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-comment.html')
 
@@ -188,11 +191,14 @@ def add_new_comment_to_question(question_id):
 def add_new_comment_to_answer(answer_id):
     submission_time = util.get_submission_time()
     question_id = data_manager.get_answer(answer_id)[0]['question_id']
+    user_id = data_manager.get_id_of_user()[0]['id']
     if request.method == 'POST':
         new_comment = {'question_id': question_id, 'answer_id': answer_id, 'message': request.form['comment_message'],
                        'submission_time': submission_time, 'edited_count': 0,
-                       'user_id': data_manager.get_id_of_user()[0]['id']}
+                       'user_id': user_id}
         data_manager.add_new_comment_to_answer(new_comment)
+        comment_count = data_manager.get_comment_count(user_id)[0]['comment_count']
+        data_manager.update_comment_count(comment_count + 1, user_id)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-comment.html')
 
