@@ -1,6 +1,6 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import request
+from flask import request, session
 
 
 import connection
@@ -424,3 +424,29 @@ def add_new_user(cursor: RealDictCursor, user) -> list:
         VALUES (%(name)s, %(password)s, %(reg_date)s, %(question_count)s, %(answer_count)s, %(comment_count)s,
         %(reputation)s)"""
     cursor.execute(query, user)
+
+
+@connection.connection_handler
+def get_all_users(cursor: RealDictCursor) -> list:
+    query = "SELECT * FROM users"
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_user_id_by_name(cursor: RealDictCursor, username) -> list:
+    query = """SELECT id FROM users
+        WHERE name = %(name)s"""
+    cursor.execute(query, {'name': username})
+    return cursor.fetchall()
+
+
+# @connection.connection_handler
+# def get_id_of_user(cursor: RealDictCursor) -> list:
+#     query = f"""
+#         SELECT id
+#         FROM users
+#         WHERE name = '{session['username']}'
+#         """
+#     cursor.execute(query)
+#     return cursor.fetchall()

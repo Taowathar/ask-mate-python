@@ -14,9 +14,10 @@
             </form>
         <br>
         {% if session['username'] %}
-            <a href="logout">Log out</a>
+            <a href="/logout">Log out</a>
+            <a href="/user/{{ user_id }}">User Page</a>
         {% else %}
-            <a href="login">Login</a>
+            <a href="/login">Login</a>
         {% endif %}
         {% if not latest_questions %}
             <form class="sorting" action='/list' method="get" enctype="multipart/form-data">
@@ -77,9 +78,11 @@
     {% else %}
         {% if session['username'] %}
         <a class="top-button" href="/question">Add question</a>
+        <a class="top-button" href="/users">List of Users</a>
+        <a href="/tags">See tags</a>
         {% endif %}
     {% endif %}
     <br>
     <br>
-    <a href="/tags">See tags</a>
+
 {% endblock %}
