@@ -8,7 +8,6 @@
     <div class="top">
         <br>
             <form class="search" action="/search" method="get" enctype="multipart/form-data">
-{#                <label for ="search_phrase">Search: </label>#}
                 <input type="text" name="search_phrase" id="search_box" width="500px" required>
                 <button type="submit" name="submit" id="submit">Search</button>
             </form>
@@ -21,7 +20,6 @@
         {% endif %}
         {% if not latest_questions %}
             <form class="sorting" action='/list' method="get" enctype="multipart/form-data">
-{#                <label for="sorting">Sort by:</label>#}
                 <select name="sorting" id="sorting" required>
                     {% for type in sort_types %}
                         <option value="{{ type }}" {{ "selected" if sorting == type }}>{{ type }}</option>

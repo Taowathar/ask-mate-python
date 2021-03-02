@@ -439,14 +439,3 @@ def get_user_id_by_name(cursor: RealDictCursor, username) -> list:
         WHERE name = %(name)s"""
     cursor.execute(query, {'name': username})
     return cursor.fetchall()
-
-
-# @connection.connection_handler
-# def get_id_of_user(cursor: RealDictCursor) -> list:
-#     query = f"""
-#         SELECT id
-#         FROM users
-#         WHERE name = '{session['username']}'
-#         """
-#     cursor.execute(query)
-#     return cursor.fetchall()
