@@ -1,6 +1,6 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import request
+from flask import request, session
 
 
 import connection
@@ -47,17 +47,19 @@ def get_latest_questions(cursor: RealDictCursor, sort: str, direction: str) -> l
 
 @connection.connection_handler
 def add_new_question(cursor: RealDictCursor, question: dict) -> list:
-    query = f"""
-        INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-        VALUES (%(submission_time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s)"""
+    query = """
+        INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_id)
+        VALUES (%(submission_time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s, %(user_id)s)
+        """
     cursor.execute(query, question)
 
 
 @connection.connection_handler
 def add_new_answer(cursor: RealDictCursor, answer) -> list:
-    query = f"""
-        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)"""
+    query = """
+        INSERT INTO answer (submission_time, vote_number, question_id, message, image, user_id)
+        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s, %(user_id)s)
+        """
     cursor.execute(query, answer)
 
 
@@ -94,7 +96,7 @@ def get_answer(cursor: RealDictCursor, answer_id) -> list:
 
 @connection.connection_handler
 def get_id(cursor: RealDictCursor) -> list:
-    query = f"""
+    query = """
         SELECT MAX(id)
         FROM question"""
     cursor.execute(query)
@@ -110,7 +112,8 @@ def update_question(cursor: RealDictCursor, question_id, updated_question) -> li
         vote_number = %(vote_number)s,
         title = %(title)s,
         message = %(message)s,
-        image = %(image)s
+        image = %(image)s,
+        user_id = %(user_id)s
         WHERE id = {question_id}"""
     cursor.execute(query, updated_question)
 
@@ -122,7 +125,8 @@ def update_answer(cursor: RealDictCursor, answer_id, updated_answer) -> list:
         SET submission_time = %(submission_time)s,
         vote_number = %(vote_number)s,
         message = %(message)s,
-        image = %(image)s
+        image = %(image)s,
+        user_id = %(user_id)s
         WHERE id = {answer_id}"""
     cursor.execute(query, updated_answer)
 
@@ -165,9 +169,9 @@ def update_answer_vote(cursor: RealDictCursor, answer_id, updated_vote) -> list:
 
 @connection.connection_handler
 def add_new_comment_to_question(cursor: RealDictCursor, comment) -> list:
-    query = f"""
-        INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-        VALUES (%(question_id)s, %(answer_id)s,%(message)s, %(submission_time)s, %(edited_count)s)"""
+    query = """
+        INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_id)
+        VALUES (%(question_id)s, %(answer_id)s,%(message)s, %(submission_time)s, %(edited_count)s, %(user_id)s)"""
     cursor.execute(query, comment)
 
 
@@ -183,15 +187,15 @@ def get_question_comments(cursor: RealDictCursor, question_id) -> list:
 
 @connection.connection_handler
 def add_new_comment_to_answer(cursor: RealDictCursor, comment) -> list:
-    query = f"""
-        INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-        VALUES (%(question_id)s, %(answer_id)s,%(message)s, %(submission_time)s, %(edited_count)s)"""
+    query = """
+        INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_id)
+        VALUES (%(question_id)s, %(answer_id)s,%(message)s, %(submission_time)s, %(edited_count)s, %(user_id)s)"""
     cursor.execute(query, comment)
 
 
 @connection.connection_handler
 def get_comments(cursor: RealDictCursor) -> list:
-    query = f"""
+    query = """
         SELECT *
         FROM comment
         """
@@ -213,9 +217,10 @@ def get_comment(cursor: RealDictCursor, comment_id) -> list:
 def edit_comment(cursor: RealDictCursor, comment_id, updated_comment) -> list:
     query = f"""
         UPDATE comment
-        SET message = %(message)s,        
+        SET message = %(message)s,
         submission_time = %(submission_time)s,
-        edited_count = %(edited_count)s
+        edited_count = %(edited_count)s,
+        user_id = %(user_id)s
         WHERE id = {comment_id}"""
     cursor.execute(query, updated_comment)
 
@@ -230,7 +235,7 @@ def delete_comment(cursor: RealDictCursor, comment_id) -> list:
 
 @connection.connection_handler
 def add_new_tag(cursor: RealDictCursor, tag) -> list:
-    query = f"""
+    query = """
         INSERT INTO tag (name)
         VALUES (%(name)s)"""
     cursor.execute(query, tag)
@@ -238,7 +243,7 @@ def add_new_tag(cursor: RealDictCursor, tag) -> list:
 
 @connection.connection_handler
 def add_new_tag_to_question(cursor: RealDictCursor, question_tag) -> list:
-    query = f"""
+    query = """
         INSERT INTO question_tag (question_id, tag_id)
         VALUES (%(question_id)s, %(tag_id)s)"""
     cursor.execute(query, question_tag)
@@ -246,16 +251,17 @@ def add_new_tag_to_question(cursor: RealDictCursor, question_tag) -> list:
 
 @connection.connection_handler
 def get_all_tags(cursor: RealDictCursor) -> list:
-    query = f"""
+    query = """
         SELECT *
         FROM tag
         """
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @connection.connection_handler
 def get_tag_names(cursor: RealDictCursor) -> list:
-    query = f"""
+    query = """
         SELECT name
         FROM tag
         """
@@ -329,8 +335,8 @@ def delete_question_tag_by_question_id(cursor: RealDictCursor, question_id) -> l
 @connection.connection_handler
 def get_all_used_tags(cursor: RealDictCursor) -> list:
     query = """
-            SELECT name, count(tag_id) AS usage 
-            FROM question_tag 
+            SELECT name, count(tag_id) AS usage
+            FROM question_tag
             JOIN tag ON tag.id=question_tag.tag_id
             GROUP BY name"""
     cursor.execute(query)
@@ -399,7 +405,6 @@ def highlight_words_title(sentence_list, phrase):
     return sentence_list
 
 
-
 def highlight_questions(search_phrase):
     questions = highlight_words_title(get_questions('submission_time', 'DESC'), search_phrase)
     return highlight_words_message(questions, search_phrase)
@@ -415,7 +420,7 @@ def get_password(cursor: RealDictCursor, username) -> list:
         WHERE name = %(name)s"""
     cursor.execute(query, {'name': username})
     return cursor.fetchall()
-    
+
 
 @connection.connection_handler
 def add_new_user(cursor: RealDictCursor, user) -> list:
@@ -424,3 +429,14 @@ def add_new_user(cursor: RealDictCursor, user) -> list:
         VALUES (%(name)s, %(password)s, %(reg_date)s, %(question_count)s, %(answer_count)s, %(comment_count)s,
         %(reputation)s)"""
     cursor.execute(query, user)
+
+
+@connection.connection_handler
+def get_id_of_user(cursor: RealDictCursor) -> list:
+    query = f"""
+        SELECT id
+        FROM users
+        WHERE name = '{session['username']}'
+        """
+    cursor.execute(query)
+    return cursor.fetchall()

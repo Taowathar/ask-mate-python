@@ -27,7 +27,8 @@ def add_question():
     if request.method == 'POST':
         filename = data_manager.save_image(app)
         question = {'submission_time': submission_time, 'view_number': 0, 'vote_number': 0,
-                    'title': request.form['title'], 'message': request.form['message'], 'image': filename}
+                    'title': request.form['title'], 'message': request.form['message'],
+                    'image': filename, 'user_id': data_manager.get_id_of_user()[0]['id']}
         data_manager.add_new_question(question)
         new_id = data_manager.get_id()[0]['max']
         return redirect(url_for('display', question_id=new_id))
@@ -38,12 +39,13 @@ def add_question():
 def update_question(question_id):
     question = data_manager.get_question(question_id)
     submission_time = util.get_submission_time()
+    print(question[0]['user_id'])
     if request.method == 'POST':
         filename = data_manager.save_image(app)
         updated_question = {'id': question_id, 'submission_time': submission_time,
                             'view_number': question[0]['view_number'], 'vote_number': question[0]['vote_number'],
                             'title': request.form['title'], 'message': request.form['message'],
-                            'image': filename}
+                            'image': filename, 'user_id': question[0]['user_id']}
         data_manager.update_question(question_id, updated_question)
         return redirect(url_for('display', question_id=question_id))
     return render_template('question.html', question=question, question_id=int(question_id) - 1)
@@ -57,7 +59,7 @@ def update_answer(answer_id):
     if request.method == 'POST':
         filename = data_manager.save_image(app)
         updated_answer = {'id': answer_id, 'submission_time': submission_time, 'vote_number': answer[0]['vote_number'],
-                          'message': request.form['message-input'], 'image': filename}
+                          'message': request.form['message-input'], 'image': filename, 'user_id': answer[0]['user_id']}
         data_manager.update_answer(answer_id, updated_answer)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-answer.html', answer=answer, answer_id=int(answer_id))
@@ -99,7 +101,7 @@ def display(question_id):
     view_number = question[0]['view_number'] + 1
     updated_question = {'id': question_id, 'submission_time': question[0]['submission_time'], 'view_number': view_number,
                         'vote_number': question[0]['vote_number'], 'title': question[0]['title'],
-                        'message': question[0]['message'], 'image': question[0]['image']}
+                        'message': question[0]['message'], 'image': question[0]['image'], 'user_id': question[0]['user_id']}
     data_manager.update_question(question_id, updated_question)
     question_tags = data_manager.get_question_tags(question_id)
     return render_template('details.html', question=question, answers=answers, question_comments=question_comments,
@@ -112,7 +114,8 @@ def add_answer(question_id):
     if request.method == 'POST':
         filename = data_manager.save_image(app)
         new_answer = {'submission_time': submission_time, 'vote_number': 0, 'question_id': question_id,
-                      'message': request.form['message-input'], 'image': filename}
+                      'message': request.form['message-input'], 'image': filename,
+                      'user_id': data_manager.get_id_of_user()[0]['id']}
         data_manager.add_new_answer(new_answer)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-answer.html')
@@ -149,7 +152,8 @@ def add_new_comment_to_question(question_id):
     submission_time = util.get_submission_time()
     if request.method == 'POST':
         new_comment = {'question_id': question_id, 'answer_id': None, 'message': request.form['comment_message'],
-                       'submission_time': submission_time, 'edited_count': 0}
+                       'submission_time': submission_time,
+                       'edited_count': 0, 'user_id': data_manager.get_id_of_user()[0]['id']}
         data_manager.add_new_comment_to_question(new_comment)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-comment.html')
@@ -161,7 +165,8 @@ def add_new_comment_to_answer(answer_id):
     question_id = data_manager.get_answer(answer_id)[0]['question_id']
     if request.method == 'POST':
         new_comment = {'question_id': question_id, 'answer_id': answer_id, 'message': request.form['comment_message'],
-                       'submission_time': submission_time, 'edited_count': 0}
+                       'submission_time': submission_time, 'edited_count': 0,
+                       'user_id': data_manager.get_id_of_user()[0]['id']}
         data_manager.add_new_comment_to_answer(new_comment)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-comment.html')
@@ -175,8 +180,10 @@ def edit_comment(comment_id):
     submission_time = util.get_submission_time()
     edited_count = comment[0]['edited_count'] + 1
     if request.method == 'POST':
-        updated_comment = {'question_id': question_id, 'answer_id': answer_id, 'message': request.form['comment_message'],
-                           'submission_time': submission_time, 'edited_count': edited_count}
+        updated_comment = {'question_id': question_id, 'answer_id': answer_id,
+                           'message': request.form['comment_message'],
+                           'submission_time': submission_time,
+                           'edited_count': edited_count, 'user_id': comment[0]['user_id']}
         data_manager.edit_comment(comment_id, updated_comment)
         return redirect(url_for('display', question_id=question_id))
     return render_template('new-comment.html', comment=comment)
