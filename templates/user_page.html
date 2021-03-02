@@ -30,7 +30,11 @@
                     <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
                     <td>{{ question['submission_time'] }}</td>
                     <td>{{ question['message'] }}</td>
-                    <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
+                    {%  if question['image'] != None and question['image'] != '' %}
+                        <td><img src='{{ url_for('static', filename='Images/'+ question['image']) }}' width="200"></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
