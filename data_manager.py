@@ -388,13 +388,6 @@ def highlight_answers(search_phrase):
     return highlight_words_message(get_all_answers(), search_phrase)
 
 
-# @connection.connection_handler
-# def get_usernames(cursor: RealDictCursor) -> list:
-#     query = "SELECT name FROM users"
-#     cursor.execute(query)
-#     return cursor.fetchall()
-
-
 @connection.connection_handler
 def get_password(cursor: RealDictCursor, username) -> list:
     query = """SELECT password FROM users

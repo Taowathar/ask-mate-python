@@ -231,25 +231,6 @@ def search():
                            search_phrase=search_phrase, answers=answers)
 
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     usernames_and_passwords = data_manager.usernames_and_passwords()
-#     error_message = False
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#         for counter in range(len(usernames_and_passwords)):
-#             if username == usernames_and_passwords[counter]['name']:
-#                 if util.verify_password(password, usernames_and_passwords[counter]['password']):
-#                     session['username'] = username
-#                     session['loggedin'] = True
-#                     return redirect(url_for('index'))
-#                 error_message = True
-#             else:
-#                 error_message = True
-#     return render_template('login.html', error_message=error_message)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -268,13 +249,6 @@ def login():
             error = 'Wrong username!'
             return render_template('login.html', error=error)
     return render_template('login.html')
-
-
-# @app.route('/logout')
-# def logout():
-#     session.pop('username', None)
-#     session['loggedin'] = False
-#     return redirect(url_for('index'))
 
 
 @app.route('/logout')
