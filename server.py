@@ -232,7 +232,7 @@ def search():
 
 @app.route('/tags')
 def show_tags():
-    show_tag = data_manager.get_all_tags()
+    show_tag = data_manager.get_all_used_tags()
     return render_template('tags.html', show_tag=show_tag)
 
 @app.route('/login', methods=['GET', 'POST'])

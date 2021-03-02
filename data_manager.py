@@ -325,11 +325,13 @@ def delete_question_tag_by_question_id(cursor: RealDictCursor, question_id) -> l
         WHERE question_id = %(question_id)s"""
     cursor.execute(query, {'question_id': question_id})
 
+
 @connection.connection_handler
-def get_all_tags(cursor: RealDictCursor) -> list:
+def get_all_used_tags(cursor: RealDictCursor) -> list:
     query = """
-            SELECT name, count(name) AS usage
-            FROM tag 
+            SELECT name, count(tag_id) AS usage 
+            FROM question_tag 
+            JOIN tag ON tag.id=question_tag.tag_id
             GROUP BY name"""
     cursor.execute(query)
     return cursor.fetchall()
