@@ -253,6 +253,15 @@ def get_all_tags(cursor: RealDictCursor) -> list:
     cursor.execute(query)
     return cursor.fetchall()
 
+@connection.connection_handler
+def get_tag_names(cursor: RealDictCursor) -> list:
+    query = f"""
+        SELECT name
+        FROM tag
+        """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 @connection.connection_handler
 def get_question_tags(cursor: RealDictCursor, question_id) -> list:
@@ -316,6 +325,15 @@ def delete_question_tag_by_question_id(cursor: RealDictCursor, question_id) -> l
         WHERE question_id = %(question_id)s"""
     cursor.execute(query, {'question_id': question_id})
 
+@connection.connection_handler
+def get_all_tags(cursor: RealDictCursor) -> list:
+    query = """
+            SELECT name, count(name) AS usage
+            FROM tag 
+            GROUP BY name"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 @connection.connection_handler
 def search_question(cursor: RealDictCursor, search_phrase) -> list:
@@ -377,6 +395,7 @@ def highlight_words_title(sentence_list, phrase):
     for sentence in sentence_list:
         sentence['title'] = sentence['title'].replace(phrase, f"<mark>{phrase}</mark>")
     return sentence_list
+
 
 
 def highlight_questions(search_phrase):

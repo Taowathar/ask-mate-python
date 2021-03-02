@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}Tags{% endblock %}
+
+{% block body %}
+    <h1>Tags</h1>
+    <table>
+        <thead>
+            <h4>
+                <tr>
+                    <th>
+                        {% for tag in show_tag %}
+                            {{ tag['name'] }} {{ 'tag used' }} {{ tag['usage'] }} {{ 'times.' }}<br><br>
+                        {% endfor %}
+                    </th>
+                </tr>
+            </h4>
+        </thead>
+    </table>
+    <br>
+    <br>
+    <a href="/list">Back to all questions</a>
+
+{% endblock %}
