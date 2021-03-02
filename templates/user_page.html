@@ -40,6 +40,35 @@
         </tbody>
     </table>
 
+    <h2>Answers:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Question Title</th>
+                <th>Message</th>
+                <th>Image</th>
+                <th>Submission Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in answers %}
+                <tr>
+                    {% for question in questions %}
+                        {% if question['id'] == answer['question_id'] %}
+                            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>{{ answer['message'] }}</td>
+                    {%  if answer['image'] != None and answer['image'] != '' %}
+                        <td><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td>{{ answer['submission_time'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <a href="/list">Back to all questions</a>
 {% endblock %}
