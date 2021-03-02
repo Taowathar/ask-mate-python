@@ -520,7 +520,8 @@ def update_comment_count(cursor: RealDictCursor, comment_count, user_id) -> list
 def get_user_questions(cursor: RealDictCursor, user_id) -> list:
     query = """
     SELECT * FROM question
-    WHERE user_id = %(user_id)s"""
+    WHERE user_id = %(user_id)s
+    ORDER BY submission_time DESC"""
     cursor.execute(query, {'user_id': user_id})
     return cursor.fetchall()
 
@@ -529,6 +530,17 @@ def get_user_questions(cursor: RealDictCursor, user_id) -> list:
 def get_user_answers(cursor: RealDictCursor, user_id) -> list:
     query = """
         SELECT * FROM answer
-        WHERE user_id = %(user_id)s"""
+        WHERE user_id = %(user_id)s
+        ORDER BY submission_time DESC"""
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_user_comments(cursor: RealDictCursor, user_id) -> list:
+    query = """
+        SELECT * FROM comment
+        WHERE user_id = %(user_id)s
+        ORDER BY submission_time DESC"""
     cursor.execute(query, {'user_id': user_id})
     return cursor.fetchall()

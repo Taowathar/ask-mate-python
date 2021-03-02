@@ -327,7 +327,8 @@ def user_page(user_id):
     user = data_manager.get_all_users()[int(user_id) - 1]
     questions = data_manager.get_user_questions(user_id)
     answers = data_manager.get_user_answers(user_id)
-    return render_template('user_page.html', user=user, questions=questions, answers=answers)
+    comments = data_manager.get_user_comments(user_id)
+    return render_template('user_page.html', user=user, questions=questions, answers=answers, comments=comments)
 
 
 if __name__ == "__main__":

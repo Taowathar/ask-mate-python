@@ -39,7 +39,6 @@
             {% endfor %}
         </tbody>
     </table>
-
     <h2>Answers:</h2>
     <table>
         <thead>
@@ -69,6 +68,28 @@
             {% endfor %}
         </tbody>
     </table>
-
+    <h2>Comments:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Question Title</th>
+                <th>Message</th>
+                <th>Submission Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in comments %}
+                <tr>
+                    {% for question in questions %}
+                        {% if question['id'] == comment['question_id'] %}
+                            <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>{{ comment['message'] }}</td>
+                    <td>{{ comment['submission_time'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <a href="/list">Back to all questions</a>
 {% endblock %}
