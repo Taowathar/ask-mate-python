@@ -35,13 +35,16 @@ def index():
 @app.route('/question', methods=['GET', 'POST'])
 def add_question():
     submission_time = util.get_submission_time()
+    user_id = data_manager.get_id_of_user()[0]['id']
     if request.method == 'POST':
         filename = data_manager.save_image(app)
         question = {'submission_time': submission_time, 'view_number': 0, 'vote_number': 0,
                     'title': request.form['title'], 'message': request.form['message'],
-                    'image': filename, 'user_id': data_manager.get_id_of_user()[0]['id']}
+                    'image': filename, 'user_id': user_id}
         data_manager.add_new_question(question)
         new_id = data_manager.get_id()[0]['max']
+        question_count = data_manager.get_question_count(user_id)[0]['question_count']
+        data_manager.update_question_count(question_count + 1, user_id)
         return redirect(url_for('display', question_id=new_id))
     return render_template('question.html')
 

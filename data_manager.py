@@ -467,3 +467,18 @@ def update_reputation(cursor: RealDictCursor, user_id, reputation) -> list:
         WHERE id = {user_id}"""
     cursor.execute(query)
 
+
+@connection.connection_handler
+def get_question_count(cursor: RealDictCursor, user_id):
+    query = "SELECT question_count FROM users WHERE id = %(user_id)s"
+    cursor.execute(query, {'user_id': user_id})
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def update_question_count(cursor: RealDictCursor, question_count, user_id) -> list:
+    query = """
+        UPDATE users
+        SET question_count = %(question_count)s
+        WHERE id = %(id)s"""
+    cursor.execute(query, {'question_count': question_count, 'id': user_id})
