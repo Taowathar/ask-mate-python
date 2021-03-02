@@ -433,12 +433,12 @@ def add_new_user(cursor: RealDictCursor, user) -> list:
 
 @connection.connection_handler
 def get_id_of_user(cursor: RealDictCursor) -> list:
-    query = f"""
+    query = """
         SELECT id
         FROM users
-        WHERE name = '{session['username']}'
+        WHERE name = %(name)s
         """
-    cursor.execute(query)
+    cursor.execute(query, {'name': session['username']})
     return cursor.fetchall()
 
 
@@ -466,12 +466,4 @@ def update_reputation(cursor: RealDictCursor, user_id, reputation) -> list:
         SET reputation = {reputation}
         WHERE id = {user_id}"""
     cursor.execute(query)
-
-
-@connection.connection_handler
-def get_user_id_by_name(cursor: RealDictCursor, username) -> list:
-    query = """SELECT id FROM users
-        WHERE name = %(name)s"""
-    cursor.execute(query, {'name': username})
-    return cursor.fetchall()
 

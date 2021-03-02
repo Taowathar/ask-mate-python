@@ -14,7 +14,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route("/list")
 def index():
     if 'username' in session:
-        user_id = data_manager.get_user_id_by_name(session['username'])[0]['id']
+        user_id = data_manager.get_id_of_user()[0]['id']
         if request.path == '/':
             questions, sort_types, directions = util.sorter(data_manager.get_latest_questions)
             return render_template('index.html', questions=questions, latest_questions=questions, user_id=user_id)
