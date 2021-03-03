@@ -85,12 +85,12 @@
                     {% else %}
                         <td  id="accept"></td>
                     {% endif %}
-                    <td  id="accept"><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
-                    <td  id="accept"><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
-                    <td  id="accept"><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
+                    <td  id="accept" class="small"><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
+                    <td  id="accept" class="small"><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
+                    <td  id="accept" class="small"><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
                     {% if session['username'] and session['username'] == question_name%}
-                        <td  id="accept"><a name="accept_answer" methods="post" href="/answer/{{ answer['id'] }}/accept">Accept answer</a></td>
-                        <td  id="accept"><a name="remove_acceptation" methods="post" href="/answer/{{ answer['id'] }}/remove">Remove acceptation</a></td>
+                        <td  id="accept" class="small"><a name="accept_answer" methods="post" href="/answer/{{ answer['id'] }}/accept">Accept answer</a></td>
+                        <td  id="accept" class="small"><a name="remove_acceptation" methods="post" href="/answer/{{ answer['id'] }}/remove">Remove acceptation</a></td>
                     {% endif %}
                 </tr><br>
                 <tr>
@@ -107,12 +107,12 @@
                     {% else %}
                         <td></td>
                     {% endif %}
-                    <td><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
-                    <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
-                    <td><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
+                    <td class="small"><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
+                    <td class="small"><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
+                    <td class="small"><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
                     {% if session['username'] and session['username'] == question_name%}
-                        <td><a name="accept_answer" methods="post"  href="/answer/{{ answer['id'] }}/accept">Accept answer</a></td>
-                        <td><a name="remove_acceptation" methods="post"  href="/answer/{{ answer['id'] }}/remove">Remove acceptation</a></td>
+                        <td class="small"><a name="accept_answer" methods="post"  href="/answer/{{ answer['id'] }}/accept">Accept answer</a></td>
+                        <td class="small"><a name="remove_acceptation" methods="post"  href="/answer/{{ answer['id'] }}/remove">Remove acceptation</a></td>
                     {% endif %}
                 </tr><br>
                 <tr>
@@ -120,16 +120,18 @@
                 {% for comment in answer_comments %}
                     {% if comment['answer_id'] == answer['id'] %}
                         <tr>
-                            <th>Comment</th>
+                            <th id="no_border"></th>
                             <th class="submission" >Submission Time</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th id="no_border"></th>
+                            <th id="no_border"></th>
+                            <th id="no_border"></th>
                             <th>Comment</th>
-                            <th></th>
-                            <th class="small" >Edited Count</th>
-                            <th class="small" >Edit</th>
-                            <th class="small" >Delete</th>
+                            <th id="no_border"></th>
+                            <th class="small">Edited Count</th>
+                            <th class="small">Edit</th>
+                            <th class="small">Delete</th>
+                            <th id="no_border"></th>
+                            <th id="no_border"></th>
                         </tr>
                         <tr>
                             <td></td>
@@ -142,6 +144,8 @@
                             <td>{{ comment['edited_count'] }}</td>
                             <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
                             <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
+                        <td></td>
+                        <td></td>
                         </tr>
                     {% endif %}
                 {% endfor %}
