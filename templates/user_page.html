@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>User page</h1>
-    <ul>
+    <ul class="user_data">
         <li>User id: {{ user['id'] }}</li>
         <li>User name: {{ user['name'] }}</li>
         <li>Registration date: {{ user['reg_date'] }}</li>
@@ -18,10 +18,10 @@
     <table>
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Submission Time</th>
+                <th class="title">Title</th>
+                <th class="submission">Submission Time</th>
                 <th>Message</th>
-                <th>Image</th>
+                <th class="image">Image</th>
             </tr>
         </thead>
         <tbody>
@@ -43,10 +43,10 @@
     <table>
         <thead>
             <tr>
-                <th>Question Title</th>
+                <th class="title">Question Title</th>
                 <th>Message</th>
-                <th>Image</th>
-                <th>Submission Time</th>
+                <th class="image">Image</th>
+                <th class="submission">Submission Time</th>
             </tr>
         </thead>
         <tbody>
@@ -72,9 +72,9 @@
     <table>
         <thead>
             <tr>
-                <th>Question Title</th>
+                <th class="title">Question Title</th>
                 <th>Message</th>
-                <th>Submission Time</th>
+                <th class="submission">Submission Time</th>
             </tr>
         </thead>
         <tbody>
@@ -91,5 +91,7 @@
             {% endfor %}
         </tbody>
     </table>
+    <br>
+    <br>
     <a href="/list">Back to all questions</a>
 {% endblock %}
