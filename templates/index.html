@@ -4,7 +4,14 @@
 
 {% block body %}
     <h1>{{ 'Latest Questions'if latest_questions else 'All Questions' }}</h1>
-    <a href="/registration">Sign Up</a>
+        <a id="signup" href="/registration">Sign Up</a>
+        {% if session['username'] %}
+            <a id="log" href="/logout">Log out</a>
+            <a id="user_page" href="/user/{{ user_id }}">User Page</a>
+        {% else %}
+            <a id="log" href="/login">Login</a>
+        {% endif %}
+
     <div class="top">
         <br>
             <form class="search" action="/search" method="get" enctype="multipart/form-data">
@@ -12,12 +19,7 @@
                 <button type="submit" name="submit" id="submit">Search</button>
             </form>
         <br>
-        {% if session['username'] %}
-            <a href="/logout">Log out</a>
-            <a href="/user/{{ user_id }}">User Page</a>
-        {% else %}
-            <a href="/login">Login</a>
-        {% endif %}
+
         {% if not latest_questions %}
             <form class="sorting" action='/list' method="get" enctype="multipart/form-data">
                 <select name="sorting" id="sorting" required>
