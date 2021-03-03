@@ -544,3 +544,32 @@ def get_user_comments(cursor: RealDictCursor, user_id) -> list:
         ORDER BY submission_time DESC"""
     cursor.execute(query, {'user_id': user_id})
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def remove_accepted_answer(cursor: RealDictCursor, answer_id) -> list:
+    query = """
+                UPDATE answer 
+                SET accepted = false 
+                WHERE id= %(answer_id)s"""
+    cursor.execute(query,{'answer_id':answer_id})
+
+
+@connection.connection_handler
+def accepted_answer(cursor: RealDictCursor, answer_id) -> list:
+    query = """
+                UPDATE answer 
+                SET accepted = true
+                WHERE id= %(answer_id)s"""
+    cursor.execute(query,{'answer_id':answer_id})
+
+@connection.connection_handler
+def get_username_by_question_id(cursor: RealDictCursor, question_id) -> list:
+    query = f"""
+            SELECT users.name 
+            FROM users
+            JOIN question 
+            ON users.id=question.user_id
+            WHERE question.id={question_id}"""
+    cursor.execute(query)
+    return cursor.fetchall()

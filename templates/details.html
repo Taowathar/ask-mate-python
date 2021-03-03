@@ -65,9 +65,36 @@
                     <th class="small" >Update Answer</th>
                     <th class="small" >Delete Answer</th>
                     <th class="small" >Add Comments</th>
+                    {% if session['username'] and session['username'] == question_name%}
+                        <th class="small" >Accept answer</th>
+                        <th class="small" >Remove acceptation</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
+            {% if answer['accepted']%}
+                <tr>
+                    <td  id="accept">{{ answer['id'] }}</td>
+                    <td id="accept">{{ answer['submission_time'] }}</td>
+                    <td id="accept">{{ answer['vote_number'] }}</td>
+                    <td id="accept"><a class='vote' href="/answer/{{ answer['id'] }}/vote_up">+</a></td>
+                    <td id="accept"><a class='vote' href="/answer/{{ answer['id'] }}/vote_down">-</a></td>
+                    <td id="accept">{{ answer['message'] }}</td>
+                    {% if answer['image'] != None and answer['image'] != '' %}
+                        <td  id="accept" class="image"><img src='{{ url_for('static', filename='Images/'+ answer['image']) }}' width="200"></td>
+                    {% else %}
+                        <td  id="accept"></td>
+                    {% endif %}
+                    <td  id="accept"><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
+                    <td  id="accept"><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
+                    <td  id="accept"><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
+                    {% if session['username'] and session['username'] == question_name%}
+                        <td  id="accept"><a name="accept_answer" methods="post" href="/answer/{{ answer['id'] }}/accept">Accept answer</a></td>
+                        <td  id="accept"><a name="remove_acceptation" methods="post" href="/answer/{{ answer['id'] }}/remove">Remove acceptation</a></td>
+                    {% endif %}
+                </tr><br>
+                <tr>
+                {% else %}
                 <tr>
                     <td>{{ answer['id'] }}</td>
                     <td>{{ answer['submission_time'] }}</td>
@@ -83,8 +110,13 @@
                     <td><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
                     <td><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
                     <td><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
+                    {% if session['username'] and session['username'] == question_name%}
+                        <td><a name="accept_answer" methods="post"  href="/answer/{{ answer['id'] }}/accept">Accept answer</a></td>
+                        <td><a name="remove_acceptation" methods="post"  href="/answer/{{ answer['id'] }}/remove">Remove acceptation</a></td>
+                    {% endif %}
                 </tr><br>
                 <tr>
+                {% endif %}
                 {% for comment in answer_comments %}
                     {% if comment['answer_id'] == answer['id'] %}
                         <tr>
@@ -122,10 +154,12 @@
     {% endif %}
     <br>
     <br>
+    {% if session['username'] %}
     <a href="/question/{{ question[0]['id'] }}/edit">Edit Question</a>
     <a href="/question/{{ question[0]['id'] }}/new-comment">Add New Comment</a>
     <a href="/question/{{ question[0]['id'] }}/delete">Delete Question</a>
     <a href="/question/{{ question[0]['id'] }}/new-tag">Add New Tag</a>
+    {% endif %}
     <a href="/tags">See tags</a>
     <br>
     <br>

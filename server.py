@@ -112,6 +112,7 @@ def display(question_id):
     answers = data_manager.get_answers(question_id)
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_comments()
+    question_name = data_manager.get_username_by_question_id(question_id)[0]['name']
     view_number = question[0]['view_number'] + 1
     updated_question = {'id': question_id, 'submission_time': question[0]['submission_time'], 'view_number': view_number,
                         'vote_number': question[0]['vote_number'], 'title': question[0]['title'],
@@ -119,7 +120,7 @@ def display(question_id):
     data_manager.update_question(question_id, updated_question)
     question_tags = data_manager.get_question_tags(question_id)
     return render_template('details.html', question=question, answers=answers, question_comments=question_comments,
-                           answer_comments=answer_comments, question_tags=question_tags)
+                           answer_comments=answer_comments, question_tags=question_tags, question_name=question_name)
 
 
 @app.route('/question/<int:question_id>/new-answer', methods=['GET', 'POST'])
@@ -329,6 +330,24 @@ def user_page(user_id):
     answers = data_manager.get_user_answers(user_id)
     comments = data_manager.get_user_comments(user_id)
     return render_template('user_page.html', user=user, questions=questions, answers=answers, comments=comments)
+
+
+@app.route('/answer/<answer_id>/accept', methods=['GET', 'POST'])
+def accept_answer(answer_id):
+    answer = data_manager.get_answer(answer_id)
+    question_id = answer[0]['question_id']
+    if request.path == '/answer/' + str(answer_id) + '/accept':
+        data_manager.accepted_answer(answer_id)
+    return redirect(url_for('display', question_id=question_id))
+
+
+@app.route('/answer/<answer_id>/remove', methods=['GET','POST'])
+def remove_acceptation(answer_id):
+    answer = data_manager.get_answer(answer_id)
+    question_id = answer[0]['question_id']
+    if request.path == '/answer/' + str(answer_id) + '/remove':
+        data_manager.remove_accepted_answer(answer_id)
+    return redirect(url_for('display', question_id=question_id))
 
 
 if __name__ == "__main__":
