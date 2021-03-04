@@ -124,6 +124,7 @@ a:hover{
 
 #X {
 	border: none;
+	background-color: transparent;
 }
 
 button, select{
