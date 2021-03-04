@@ -37,8 +37,13 @@
                             <td>{{ comment['message'] }}</td>
                             <td>{{ comment['submission_time'] }}</td>
                             <td>{{ comment['edited_count'] }}</td>
-                            <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
-                            <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
+                            {% if session['username'] and session['username'] == question_name%}
+                                <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
+                                <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
+                            {% else %}
+                                <td></td>
+                                <td></td>
+                            {% endif %}
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -85,7 +90,7 @@
                     {% else %}
                         <td  id="accept"></td>
                     {% endif %}
-                    {% if session['username'] %}
+                    {% if session['username'] and session['username'] == question_name%}
                         <td  id="accept" class="small"><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
                         <td  id="accept" class="small"><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
                         <td  id="accept" class="small"><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
@@ -113,7 +118,7 @@
                     {% else %}
                         <td></td>
                     {% endif %}
-                    {% if session['username'] %}
+                    {% if session['username'] and session['username'] == question_name%}
                         <td class="small"><a href="/answer/{{ answer['id'] }}/edit">Edit</a> </td>
                         <td class="small"><a href="/answer/{{ answer['id'] }}/delete">Delete</a></td>
                         <td class="small"><a href="/answer/{{ answer['id'] }}/new-comment">Add</a></td>
@@ -156,7 +161,7 @@
                             <td>{{ comment['message'] }} </td>
                             <td></td>
                             <td>{{ comment['edited_count'] }}</td>
-                            {% if session['username'] %}
+                            {% if session['username'] and session['username'] == question_name%}
                                 <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
                                 <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
                             {% else %}
