@@ -325,7 +325,7 @@ def users():
 
 @app.route('/user/<user_id>')
 def user_page(user_id):
-    user = data_manager.get_all_users()[int(user_id) - 1]
+    user = data_manager.get_user_by_id(user_id)[0]
     questions = data_manager.get_user_questions(user_id)
     answers = data_manager.get_user_answers(user_id)
     comments = data_manager.get_user_comments(user_id)
