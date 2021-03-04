@@ -336,8 +336,11 @@ def user_page(user_id):
 def accept_answer(answer_id):
     answer = data_manager.get_answer(answer_id)
     question_id = answer[0]['question_id']
+    current_reputation = data_manager.get_reputation(answer[0]['user_id'])
     if request.path == '/answer/' + str(answer_id) + '/accept':
         data_manager.accepted_answer(answer_id)
+        new_reputation = current_reputation[0]['reputation'] + 15
+        data_manager.update_reputation(answer[0]['user_id'], new_reputation)
     return redirect(url_for('display', question_id=question_id))
 
 
@@ -345,8 +348,11 @@ def accept_answer(answer_id):
 def remove_acceptation(answer_id):
     answer = data_manager.get_answer(answer_id)
     question_id = answer[0]['question_id']
+    current_reputation = data_manager.get_reputation(answer[0]['user_id'])
     if request.path == '/answer/' + str(answer_id) + '/remove':
         data_manager.remove_accepted_answer(answer_id)
+        new_reputation = current_reputation[0]['reputation'] - 15
+        data_manager.update_reputation(answer[0]['user_id'], new_reputation)
     return redirect(url_for('display', question_id=question_id))
 
 
