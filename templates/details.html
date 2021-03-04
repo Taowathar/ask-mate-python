@@ -130,8 +130,10 @@
                             <th class="small">Edited Count</th>
                             <th class="small">Edit</th>
                             <th class="small">Delete</th>
-                            <th id="no_border"></th>
-                            <th id="no_border"></th>
+                            {% if answer['accepted']%}
+                                <th id="no_border"></th>
+                                <th id="no_border"></th>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td></td>
@@ -144,8 +146,10 @@
                             <td>{{ comment['edited_count'] }}</td>
                             <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
                             <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
-                        <td></td>
-                        <td></td>
+                            {% if answer['accepted']%}
+                                <td></td>
+                                <td></td>
+                            {% endif %}
                         </tr>
                     {% endif %}
                 {% endfor %}
