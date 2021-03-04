@@ -8,6 +8,7 @@
         {% if session['username'] %}
             <a id="log" href="/logout">Log out</a>
             <a id="user_page" href="/user/{{ user_id }}">User Page</a>
+            <a id="list_of_users" class="top-button" href="/users">List of Users</a>
         {% else %}
             <a id="log" href="/login">Login</a>
         {% endif %}
@@ -78,7 +79,6 @@
     {% else %}
         {% if session['username'] %}
         <a class="top-button" href="/question">Add question</a>
-        <a id="list_of_users" class="top-button" href="/users">List of Users</a>
         <a href="/tags">See tags</a>
         {% endif %}
     {% endif %}
