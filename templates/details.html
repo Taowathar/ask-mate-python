@@ -130,7 +130,7 @@
                             <th class="small">Edited Count</th>
                             <th class="small">Edit</th>
                             <th class="small">Delete</th>
-                            {% if answer['accepted']%}
+                            {% if session['username'] and session['username'] == question_name %}
                                 <th id="no_border"></th>
                                 <th id="no_border"></th>
                             {% endif %}
@@ -146,7 +146,7 @@
                             <td>{{ comment['edited_count'] }}</td>
                             <td><a href="/comment/{{ comment['id'] }}/edit">Edit</a></td>
                             <td><a href="/comment/{{ comment['id'] }}/delete">Delete</a></td>
-                            {% if answer['accepted']%}
+                            {% if session['username'] and session['username'] == question_name %}
                                 <td></td>
                                 <td></td>
                             {% endif %}
